@@ -77,7 +77,7 @@ public class main {
                         System.out.println("---- Coches ----");
                         System.out.println("1 - Listar Coches");
                         System.out.println("2 - Listar un Coche por Matrícula");
-                        System.out.println("3 - Listar Coches por Nº de Asientos");
+                        System.out.println("3 - Listar Coches por Nº de Plazas");
                         System.out.println("4 - Añadir Coche");
                         System.out.println("5 - Modificar Coche");
                         System.out.println("6 - Eliminar Coche");
@@ -94,6 +94,10 @@ public class main {
                                 break;
                             case "2":
                                 Coches.listarUno();
+                                pause();
+                                break;
+                            case "3":
+                                Coches.listarPorAsientos();
                                 pause();
                                 break;
                             default:

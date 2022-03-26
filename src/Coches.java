@@ -76,6 +76,37 @@ public class Coches {
         }
     }
 
+    public static void listarPorAsientos(){
+        try{
+            Connection conexion = (Connection) Conexion.conectarBd();
+            TableList tabla = new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
+                    "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
+            int asientos;
+            String consulta = "SELECT * FROM coches where numeroPlazas = ?";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce el Nº de Asientos a Filtrar [2 / 5]: ");
+            try{
+                asientos = scanner.nextInt();
+            }catch(Exception e){
+                asientos = 0;
+            }
+            sentencia.setInt(1, asientos);
+            ResultSet resultado = sentencia.executeQuery();
+            while(resultado.next()){
+                //Sacamos los resultados
+                tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
+                        resultado.getString("marca") + " " +  resultado.getString("modelo"),
+                        resultado.getString("añoFabricacion"), resultado.getString("color"),
+                        resultado.getString("numeroPlazas"),resultado.getString("numeroPuertas"),
+                        resultado.getString("grandariaMaletero") + "L",resultado.getString("combustible"));
+            }
+            tabla.print();
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
 
     public int getAñoFabricacion() {
         return añoFabricacion;
