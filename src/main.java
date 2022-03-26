@@ -11,12 +11,6 @@ public class main {
         System.out.println("Error, Selecciona una opción válida!");
     }
     public static void main(String[] args) {
-        /*Clientes.listarClientes();
-        Clientes.listarUno();
-        Coches.listarCoches();
-        AlquilerCoches.listarAlquileres();
-        Mecanicos.listarMecanicos();
-        MantenimientoCoches.listarMantenimientos();*/
 
         Scanner teclado=new Scanner(System.in);
         String op1="";
@@ -153,7 +147,7 @@ public class main {
                                 pause();
                                 break;
                             case "2":
-                                //Mecanicos.listarUno();
+                                Mecanicos.listarUno();
                                 pause();
                                 break;
                             default:
@@ -177,11 +171,11 @@ public class main {
                             case "0":
                                 break;
                             case "1":
-                                Mecanicos.listarMecanicos();
+                                MantenimientoCoches.listarMantenimientos();
                                 pause();
                                 break;
                             case "2":
-                                //Mecanicos.listarUno();
+                                MantenimientoCoches.listarUno();
                                 pause();
                                 break;
                             default:

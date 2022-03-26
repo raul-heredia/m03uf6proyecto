@@ -1,15 +1,15 @@
 import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class AlquilerCoches {
-    private String matricula, dni, lugarDevolucion, tipoSeguro;
-    private Date fechaInico, fechaFinal;
+    private String matricula, dni, lugarDevolucion, tipoSeguro, fechaInico, fechaFinal;
     private double precioPorDia;
     private Boolean isRetornDipositPle;
-
+    private static final SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
 
@@ -25,11 +25,19 @@ public class AlquilerCoches {
         this.tipoSeguro = tipoSeguro;
         this.precioPorDia = precioPorDia;
         this.isRetornDipositPle = isRetornDipositPle;
-        this.fechaInico = new Date();
+        Date today = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(this.fechaInico);
+        c.setTime(today);
         c.add(Calendar.DATE, numeroDias);
-        this.fechaFinal = c.getTime();
+        this.fechaInico = sm.format(today);
+        this.fechaFinal = sm.format(c.getTime());
+
+        System.out.println(this.fechaInico + "    " + this.fechaFinal);
+    }
+
+    public static TableList table(){
+        return new TableList(10,"Matrícula","Marca y Modelo","DNI","Nombre Completo Cliente","Fecha Inicio Alquiler",
+                "Fecha Fin Alquiler","Precio Por Día","Lugar de Devolución","Retorno Deposito Lleno","Tipo de Seguro").sortBy(0).withUnicode(true);
     }
 
     public static void listarAlquileres(){
@@ -41,8 +49,7 @@ public class AlquilerCoches {
                     "alquilercoches.tipoSeguro, clientes.nombreCompleto, coches.marca, coches.modelo FROM alquilercoches " +
                     "INNER JOIN clientes ON alquilerCoches.dni = clientes.dni INNER JOIN coches ON alquilerCoches.matricula = coches.matricula");
             System.out.println("---- Listado de Vehiculos Alquilados ----");
-            TableList tabla = new TableList(10,"Matrícula","Marca y Modelo","DNI","Nombre Completo Cliente","Fecha Inicio Alquiler",
-                    "Fecha Fin Alquiler","Precio Por Día","Lugar de Devolución","Retorno Deposito Lleno","Tipo de Seguro").sortBy(0).withUnicode(true);
+            TableList tabla = table();
             while(resultado.next()){
                 String isDeposito = "No";
                 if(resultado.getString("isRetornDipositPle").equals("1")){
@@ -64,8 +71,6 @@ public class AlquilerCoches {
     public static void listarUno(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
-            TableList tabla = new TableList(10,"Matrícula","Marca y Modelo","DNI","Nombre Completo Cliente","Fecha Inicio Alquiler",
-                    "Fecha Fin Alquiler","Precio Por Día","Lugar de Devolución","Retorno Deposito Lleno","Tipo de Seguro").sortBy(0).withUnicode(true);
             String matricula, dni;
             String consulta = "SELECT alquilercoches.matricula, alquilercoches.dni, alquilercoches.fechaInicio," +
             "alquilercoches.fechaFinal,alquilercoches.precioPorDia,alquilercoches.lugarDevolucion,alquilercoches.isRetornDipositPle," +
@@ -81,6 +86,7 @@ public class AlquilerCoches {
             sentencia.setString(1, a.getMatricula());
             sentencia.setString(2, a.getDni());
             ResultSet resultado = sentencia.executeQuery();
+            TableList tabla = table();
             while(resultado.next()){
                 String isDeposito = "No";
                 if(resultado.getString("isRetornDipositPle").equals("1")){
@@ -132,19 +138,19 @@ public class AlquilerCoches {
         this.tipoSeguro = tipoSeguro;
     }
 
-    public Date getFechaInico() {
+    public String getFechaInico() {
         return fechaInico;
     }
 
-    public void setFechaInico(Date fechaInico) {
+    public void setFechaInico(String fechaInico) {
         this.fechaInico = fechaInico;
     }
 
-    public Date getFechaFinal() {
+    public String getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(Date fechaFinal) {
+    public void setFechaFinal(String fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
 

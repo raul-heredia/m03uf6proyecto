@@ -26,6 +26,8 @@ insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lu
 
 # mecanicos
 insert into mecanicos (dni,nombreCompleto,fechaNacimiento,telefono,direccion,ciudad,pais,email,puntosCarnet,salario,numSS,titulacion,fechaContratacion) values("25256867S","Paco Sanz Bullo","1969-07-12","662113365","C/ Valencia 680","Barcelona","España","paco.sanz@gmail.com",15,1899.12,123785964212,"CFGS Automoción","1990-04-12");	
+insert into mecanicos (dni,nombreCompleto,fechaNacimiento,telefono,direccion,ciudad,pais,email,puntosCarnet,salario,numSS,titulacion,fechaContratacion) values("46022613G","Fernando Alonso Díaz","1981-07-29","633217854","C/ Oviedo 2","Barcelona","España","fenando.alonso@gmail.com",15,2250.50,573197002591,"Ingenieria Automoción","2000-04-12");	
 
 # mantenimientoCoches
 insert into mantenimientoCoches (matricula,dni,fechaInMantenimiento,fechaFiMantenimiento) values("M0000FG","25256867S","2022-01-01","2022-01-05");	
+insert into mantenimientoCoches (matricula,dni,fechaInMantenimiento,fechaFiMantenimiento) values("B8956LM","46022613G","2022-02-10","2022-02-11");	

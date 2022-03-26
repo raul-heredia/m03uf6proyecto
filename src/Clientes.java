@@ -25,14 +25,18 @@ public class Clientes {
         this.puntosCarnet = puntosCarnet;
     }
 
+    public static TableList table(){
+        return new TableList(9,"DNI","Nombre Completo","Fecha de Nacimiento",
+                "Teléfono","Dirección","Ciudad","País","Email","Puntos Carnet").sortBy(0).withUnicode(true);
+    }
+
     public static void listarClientes(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
             Statement sentencia = conexion.createStatement();
             ResultSet resultado = sentencia.executeQuery("SELECT * FROM clientes");
             System.out.println("---- Listado de Clientes ----");
-            TableList tabla = new TableList(9,"DNI","Nombre Completo","Fecha de Nacimiento",
-                    "Teléfono","Dirección","Ciudad","País","Email","Puntos Carnet").sortBy(0).withUnicode(true);
+            TableList tabla = table();
             while(resultado.next()){
                 //Sacamos los resultados
                 tabla.addRow(resultado.getString("dni"), resultado.getString("nombreCompleto"),
@@ -49,8 +53,6 @@ public class Clientes {
     public static void listarUno(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
-            TableList tabla = new TableList(9,"DNI","Nombre Completo","Fecha de Nacimiento",
-                    "Teléfono","Dirección","Ciudad","País","Email","Puntos Carnet").sortBy(0).withUnicode(true);
             String dni;
             String consulta = "SELECT * FROM clientes where dni = ?";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
@@ -59,6 +61,7 @@ public class Clientes {
             Clientes c = new Clientes(dni);
             sentencia.setString(1, c.getDni());
             ResultSet resultado = sentencia.executeQuery();
+            TableList tabla = table();
             while(resultado.next()){
                 //Sacamos los resultados
                 tabla.addRow(resultado.getString("dni"), resultado.getString("nombreCompleto"),

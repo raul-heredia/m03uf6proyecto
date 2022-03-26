@@ -26,16 +26,19 @@ public class Coches {
         this.combustible = combustible;
     }
 
+    public static TableList table(){
+        return new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
+                "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
+    }
+
     public static void listarCoches(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
             Statement sentencia = conexion.createStatement();
             ResultSet resultado = sentencia.executeQuery("SELECT * FROM coches");
             System.out.println("---- Listado de Vehiculos ----");
-            TableList tabla = new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
-                    "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
+            TableList tabla = table();
             while(resultado.next()){
-                //Sacamos los resultados
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
                         resultado.getString("marca") + " " +  resultado.getString("modelo"),
                         resultado.getString("añoFabricacion"), resultado.getString("color"),
@@ -51,8 +54,6 @@ public class Coches {
     public static void listarUno(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
-            TableList tabla = new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
-                    "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
             String matricula;
             String consulta = "SELECT * FROM coches where matricula = ?";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
@@ -61,8 +62,8 @@ public class Coches {
             Coches c = new Coches(matricula);
             sentencia.setString(1, c.getMatricula());
             ResultSet resultado = sentencia.executeQuery();
+            TableList tabla = table();
             while(resultado.next()){
-                //Sacamos los resultados
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
                         resultado.getString("marca") + " " +  resultado.getString("modelo"),
                         resultado.getString("añoFabricacion"), resultado.getString("color"),
@@ -79,8 +80,6 @@ public class Coches {
     public static void listarPorAsientos(){
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
-            TableList tabla = new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
-                    "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
             int asientos;
             String consulta = "SELECT * FROM coches where numeroPlazas = ?";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
@@ -92,8 +91,8 @@ public class Coches {
             }
             sentencia.setInt(1, asientos);
             ResultSet resultado = sentencia.executeQuery();
+            TableList tabla = table();
             while(resultado.next()){
-                //Sacamos los resultados
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
                         resultado.getString("marca") + " " +  resultado.getString("modelo"),
                         resultado.getString("añoFabricacion"), resultado.getString("color"),
