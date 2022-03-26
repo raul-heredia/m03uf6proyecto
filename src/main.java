@@ -125,7 +125,7 @@ public class main {
                                 pause();
                                 break;
                             case "2":
-                                //AlquilerCoches.listarUno();
+                                AlquilerCoches.listarUno();
                                 pause();
                                 break;
                             default:
