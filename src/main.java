@@ -8,5 +8,6 @@ public class main {
     public static void main(String[] args) {
         Clientes.listarClientes();
         Coches.listarCoches();
+        AlquilerCoches.listarAlquileres();
     }
 }
