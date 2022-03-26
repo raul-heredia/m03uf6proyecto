@@ -10,5 +10,6 @@ public class main {
         Coches.listarCoches();
         AlquilerCoches.listarAlquileres();
         Mecanicos.listarMecanicos();
+        MantenimientoCoches.listarMantenimientos();
     }
 }

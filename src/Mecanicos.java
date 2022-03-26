@@ -9,7 +9,7 @@ public class Mecanicos {
             Connection conexion = (Connection) Conexion.conectarBd();
             Statement sentencia = conexion.createStatement();
             ResultSet resultado = sentencia.executeQuery("SELECT * FROM mecanicos");
-            System.out.println("---- Listado de Mecanicos ----");
+            System.out.println("---- Listado de Mecánicos ----");
             DecimalFormat formatter = new DecimalFormat("00");
             TableList tabla = new TableList(13, "DNI", "Nombre Completo", "Fecha de Nacimiento", "Teléfono", "Dirección",
                     "Ciudad", "País", "Email", "Puntos Carnet", "Salario", "Nº Seguridad Social", "Titulación", "Fecha de Contratación").sortBy(0).withUnicode(true);
