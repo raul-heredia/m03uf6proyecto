@@ -1,3 +1,4 @@
+CREATE DATABASE m03uf6proyecto;
 USE m03uf6proyecto;
 CREATE TABLE clientes(
     dni VARCHAR(9) NOT NULL PRIMARY KEY,
@@ -15,6 +16,7 @@ CREATE TABLE coches(
     numeroBastidor VARCHAR(17) NOT NULL,
     marca VARCHAR(25) NOT NULL,
     modelo VARCHAR(25) NOT NULL,
+    añoFabricacion INT NOT NULL,
     color VARCHAR(20) NOT NULL,
     numeroPlazas INT NOT NULL,
     numeroPuertas INT NOT NULL,
@@ -27,6 +29,7 @@ CREATE TABLE alquilerCoches(
     fechaInicio DATE,
     fechaFinal DATE,
     precioPorDia DOUBLE,
+    lugarDevolucion ENUM('Barcelona','Madrid','Sevilla','Zaragoza','Santander','Tarragona'),
     isRetornDipositPle TINYINT,
     tipoSeguro ENUM('Franquícia','Sin Franquícia'),
     PRIMARY KEY (matricula, dni),
