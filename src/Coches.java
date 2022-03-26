@@ -62,6 +62,10 @@ public class Coches {
             Coches c = new Coches(matricula);
             sentencia.setString(1, c.getMatricula());
             ResultSet resultado = sentencia.executeQuery();
+            if (resultado.next() == false){
+                System.out.println("Error, No existe ningún coche con Matrícula: " + matricula);
+                return;
+            }
             TableList tabla = table();
             while(resultado.next()){
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
@@ -91,6 +95,10 @@ public class Coches {
             }
             sentencia.setInt(1, asientos);
             ResultSet resultado = sentencia.executeQuery();
+            if (resultado.next() == false){
+                System.out.println("No tenemos ningún vehiculo de " + asientos + " plazas disponible");
+                return;
+            }
             TableList tabla = table();
             while(resultado.next()){
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),

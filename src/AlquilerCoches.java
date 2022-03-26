@@ -86,6 +86,10 @@ public class AlquilerCoches {
             sentencia.setString(1, a.getMatricula());
             sentencia.setString(2, a.getDni());
             ResultSet resultado = sentencia.executeQuery();
+            if (resultado.next() == false){
+                System.out.println("Error, No hemos encontrado ningún registro con los datos seleccionados");
+                return;
+            }
             TableList tabla = table();
             while(resultado.next()){
                 String isDeposito = "No";

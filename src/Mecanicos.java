@@ -73,6 +73,10 @@ public class Mecanicos {
             Mecanicos m = new Mecanicos(dni);
             sentencia.setString(1, m.getDni());
             ResultSet resultado = sentencia.executeQuery();
+            if (resultado.next() == false){
+                System.out.println("Error, No existe ningún mecánico con DNI: " + dni);
+                return;
+            }
             TableList tabla = table();
             while (resultado.next()) {
                 //Sacamos los resultados

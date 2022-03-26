@@ -65,6 +65,14 @@ public class main {
                                 Clientes.insertarRegistro();
                                 pause();
                                 break;
+                            case "4":
+                                Clientes.modificarRegistro();
+                                pause();
+                                break;
+                            case "5":
+                                Clientes.eliminarRegistro();
+                                pause();
+                                break;
                             default:
                                 error();
                         }
