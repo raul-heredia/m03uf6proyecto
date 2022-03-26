@@ -9,5 +9,6 @@ public class main {
         Clientes.listarClientes();
         Coches.listarCoches();
         AlquilerCoches.listarAlquileres();
+        Mecanicos.listarMecanicos();
     }
 }
