@@ -76,6 +76,48 @@ public class Clientes {
         }
     }
 
+    public static void insertarRegistro(){
+        try{
+            Scanner sc = new Scanner(System.in).useDelimiter("\n");
+            String dni, nombre, fechaNacimiento, telefono, direccion, ciudad, pais, email;
+            int puntosCarnet;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "insert into clientes (dni,nombreCompleto,fechaNacimiento,telefono,direccion,ciudad,pais,email,puntosCarnet) values(?,?,?,?,?,?,?,?,?);";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce el DNI: ");
+            dni = sc.next();
+            System.out.printf("Introduce el Nombre Completo: ");
+            nombre = sc.next();
+            System.out.printf("Introduce la Fecha de Nacimiento formato [YYYY-MM-DD]: ");
+            fechaNacimiento = sc.next();
+            System.out.printf("Introduce el Teléfono: ");
+            telefono = sc.next();
+            System.out.printf("Introduce la Dirección: ");
+            direccion = sc.next();
+            System.out.printf("Introduce la Ciudad: ");
+            ciudad = sc.next();
+            System.out.printf("Introduce el País: ");
+            pais = sc.next();
+            System.out.printf("Introduce el Email: ");
+            email = sc.next();
+            System.out.printf("Introduce los Puntos del Carnet: ");
+            puntosCarnet = sc.nextInt();
+            sentencia.setString(1, dni);
+            sentencia.setString(2, nombre);
+            sentencia.setString(3, fechaNacimiento);
+            sentencia.setString(4, telefono);
+            sentencia.setString(5, direccion);
+            sentencia.setString(6, ciudad);
+            sentencia.setString(7, pais);
+            sentencia.setString(8, email);
+            sentencia.setInt(9, puntosCarnet);
+            int row = sentencia.executeUpdate();
+            System.out.println("Se ha insertado el cliente correctamente");
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
 
     public String getDni() {
         return dni;

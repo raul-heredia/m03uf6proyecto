@@ -43,9 +43,9 @@ public class main {
                         System.out.println("---- Clientes ----");
                         System.out.println("1 - Listar Clientes");
                         System.out.println("2 - Listar un Cliente por DNI");
-                        System.out.println("3 - Gestión Alquileres");
-                        System.out.println("4 - Gestión Mecánicos");
-                        System.out.println("5 - Gestión Mantenimientos");
+                        System.out.println("3 - Añadir Cliente");
+                        System.out.println("4 - Modificar Cliente");
+                        System.out.println("5 - Eliminar Cliente");
                         System.out.println("0 - Volver Atrás");
                         System.out.printf("Selecciona una opción: ");
 
@@ -59,6 +59,10 @@ public class main {
                                 break;
                             case "2":
                                 Clientes.listarUno();
+                                pause();
+                                break;
+                            case "3":
+                                Clientes.insertarRegistro();
                                 pause();
                                 break;
                             default:
