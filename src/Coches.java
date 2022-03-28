@@ -114,6 +114,23 @@ public class Coches {
         }
     }
 
+    public static void eliminarRegistro(){
+        try{
+            String matricula;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "DELETE FROM coches where matricula = ?";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la Matrícula: ");
+            matricula = scanner.next();
+            Coches c = new Coches(matricula);
+            sentencia.setString(1, c.getMatricula());
+            int row = sentencia.executeUpdate();
+            System.out.println("Registro eliminado correctamente");
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
 
     public int getAñoFabricacion() {
         return añoFabricacion;

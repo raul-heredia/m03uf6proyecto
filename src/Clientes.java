@@ -216,7 +216,6 @@ public class Clientes {
     }
     public static void eliminarRegistro(){
         try{
-            Scanner sc = new Scanner(System.in).useDelimiter("\n");
             String dni;
             Connection conexion = (Connection) Conexion.conectarBd();
             String consulta = "DELETE FROM clientes where dni = ?";
