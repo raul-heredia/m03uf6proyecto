@@ -197,15 +197,16 @@ public class Clientes {
             }catch(Exception e){
                 puntosCarnetMod = puntosCarnet;
             }
-            sentencia.setString(1, nombreCompletoMod);
-            sentencia.setString(2, fechaNacimientoMod);
-            sentencia.setString(3, telefonoMod);
-            sentencia.setString(4, direccionMod);
-            sentencia.setString(5, ciudadMod);
-            sentencia.setString(6, paisMod);
-            sentencia.setString(7, emailMod);
-            sentencia.setInt(8, puntosCarnetMod);
-            sentencia.setString(9, dni);
+            Clientes c = new Clientes(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod,puntosCarnetMod);
+            sentencia.setString(1, c.getNombreCompleto());
+            sentencia.setString(2, c.getFechaNacimiento());
+            sentencia.setString(3, c.getTelefono());
+            sentencia.setString(4, c.getDireccion());
+            sentencia.setString(5, c.getCiudad());
+            sentencia.setString(6, c.getPais());
+            sentencia.setString(7, c.getEmail());
+            sentencia.setInt(8, c.getPuntosCarnet());
+            sentencia.setString(9, c.getDni());
             int row = sentencia.executeUpdate();
             System.out.println("Se ha modificado el registro correctamente");
             conexion.close();
