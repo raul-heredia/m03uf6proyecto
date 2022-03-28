@@ -91,7 +91,6 @@ public class AlquilerCoches {
                 return;
             }
             TableList tabla = table();
-            while(resultado.next()){
                 String isDeposito = "No";
                 if(resultado.getString("isRetornDipositPle").equals("1")){
                     isDeposito = "Sí";
@@ -101,7 +100,7 @@ public class AlquilerCoches {
                         resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
                         resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
                         resultado.getString("lugarDevolucion"),isDeposito,resultado.getString("tipoSeguro"));
-            }
+
             tabla.print();
             conexion.close();
         }catch (Exception e){

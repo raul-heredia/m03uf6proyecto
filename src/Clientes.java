@@ -66,13 +66,13 @@ public class Clientes {
                 System.out.println("Error, No existe ningún cliente con DNI " + dni);
                 return;
             }
-            while(resultado.next()){
+
                 //Sacamos los resultados
                 tabla.addRow(resultado.getString("dni"), resultado.getString("nombreCompleto"),
                         resultado.getString("fechaNacimiento"), resultado.getString("telefono"),
                         resultado.getString("direccion"), resultado.getString("ciudad"),resultado.getString("pais"),
                         resultado.getString("email"), formatter.format(Integer.parseInt(resultado.getString("puntosCarnet"))) + " Puntos");
-            }
+
             tabla.print();
             conexion.close();
         }catch (Exception e){
@@ -130,45 +130,84 @@ public class Clientes {
     }
     public static void modificarRegistro(){
         try{
-            String dni, nombreCompleto = "", fechaNacimiento = "",telefono = "", direccion = "", ciudad = "", pais ="", email ="";
-            int puntosCarnet = 0;
+            String dni, nombreCompleto, fechaNacimiento,telefono, direccion, ciudad, pais, email;
+            int puntosCarnet;
+            String nombreCompletoMod, fechaNacimientoMod,telefonoMod, direccionMod, ciudadMod, paisMod, emailMod;
+            int puntosCarnetMod;
             Connection conexion = (Connection) Conexion.conectarBd();
             String preConsulta = "SELECT * FROM clientes WHERE dni = ?";
-            String consulta = "UPDATE clientes SET nombrecompleto = ?, telefono = ? WHERE dni = ?";
+            String consulta = "UPDATE clientes SET nombrecompleto = ?, fechaNacimiento = ?, telefono = ?, direccion = ?," +
+                    " ciudad = ?, pais = ?, email = ?, puntosCarnet = ? WHERE dni = ?";
             PreparedStatement preSentencia = conexion.prepareStatement(preConsulta);
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
             System.out.printf("Introduce el DNI: ");
             dni = scanner.next();
             preSentencia.setString(1, dni);
             ResultSet resultado = preSentencia.executeQuery();
+
             if (resultado.next() == false){
                 System.out.println("Error, No existe ningún cliente con DNI " + dni);
                 return;
             }
-            while(resultado.next()){
-                nombreCompleto = resultado.getString("nombreCompleto");
-                fechaNacimiento = resultado.getString("fechaNacimiento");
-                telefono = resultado.getString("telefono");
-                direccion = resultado.getString("direccion");
-                ciudad = resultado.getString("ciudad");
-                pais = resultado.getString("pais");
-                email = resultado.getString("email");
-                puntosCarnet = Integer.parseInt(resultado.getString("puntosCarnet"));
+            nombreCompleto = resultado.getString("nombreCompleto");
+            fechaNacimiento = resultado.getString("fechaNacimiento");
+            telefono = resultado.getString("telefono");
+            direccion = resultado.getString("direccion");
+            ciudad = resultado.getString("ciudad");
+            pais = resultado.getString("pais");
+            email = resultado.getString("email");
+            puntosCarnet = Integer.parseInt(resultado.getString("puntosCarnet"));
+
+            System.out.println("---- DATOS CLIENTE ANTES DE MODIFICAR ----");
+            TableList tablaAntes = table();
+            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email, Integer.toString(puntosCarnet));
+            tablaAntes.print();
+
+            System.out.printf("Nuevo Nombre [Deja en blanco para no modificar]: ");
+            nombreCompletoMod = scanner.next();
+            if (nombreCompletoMod.isEmpty()) nombreCompletoMod = nombreCompleto; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nueva Fecha de Nacimiento [Formato YYYY-MM-DD] [Deja en blanco para no modificar]: ");
+            fechaNacimientoMod = scanner.next();
+            if (nombreCompletoMod.isEmpty()) fechaNacimientoMod = fechaNacimiento; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nuevo Telefono [Deja en blanco para no modificar]: ");
+            telefonoMod = scanner.next();
+            if (telefonoMod.isEmpty()) telefonoMod = telefono; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nueva Dirección [Deja en blanco para no modificar]: ");
+            direccionMod = scanner.next();
+            if (direccionMod.isEmpty()) direccionMod = direccion; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nueva Ciudad [Deja en blanco para no modificar]: ");
+            ciudadMod = scanner.next();
+            if (ciudadMod.isEmpty()) ciudadMod = ciudad; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nuevo País [Deja en blanco para no modificar]: ");
+            paisMod = scanner.next();
+            if (paisMod.isEmpty()) paisMod = pais; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nuevo Email [Deja en blanco para no modificar]: ");
+            emailMod = scanner.next();
+            if (emailMod.isEmpty()) emailMod = email; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nuevos Puntos del Carnet [Deja en blanco para no modificar]: ");
+            try{
+                puntosCarnetMod = scanner.nextInt();
+            }catch(Exception e){
+                puntosCarnetMod = puntosCarnet;
             }
-            System.out.printf("Nuevo Nombre  [ Nombre actual: "+ nombreCompleto + " ] [Deja en blanco para no modificar]: ");
-            if(!scanner.next().equals("")){
-                nombreCompleto = scanner.next();
-            }
-            System.out.printf("Introduce el nuevo Teléfono: ");
-            if(!scanner.next().equals("")){
-                telefono = scanner.next();
-            }
-            /*sentencia.setString(1, nombre);
-            sentencia.setString(2, telefono);
-            sentencia.setInt(3, dni);
+            sentencia.setString(1, nombreCompletoMod);
+            sentencia.setString(2, fechaNacimientoMod);
+            sentencia.setString(3, telefonoMod);
+            sentencia.setString(4, direccionMod);
+            sentencia.setString(5, ciudadMod);
+            sentencia.setString(6, paisMod);
+            sentencia.setString(7, emailMod);
+            sentencia.setInt(8, puntosCarnetMod);
+            sentencia.setString(9, dni);
             int row = sentencia.executeUpdate();
-            System.out.println("Se ha modificado el registro correctamente"); */
-            System.out.println(nombreCompleto + " " + fechaNacimiento + " " + telefono + " " + direccion + " " + ciudad + " " + pais + " " + email + " " + puntosCarnet);
+            System.out.println("Se ha modificado el registro correctamente");
             conexion.close();
         }catch (Exception e){
             System.out.println(e);

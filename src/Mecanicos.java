@@ -78,8 +78,6 @@ public class Mecanicos {
                 return;
             }
             TableList tabla = table();
-            while (resultado.next()) {
-                //Sacamos los resultados
                 tabla.addRow(resultado.getString("dni"), resultado.getString("nombreCompleto"),
                         resultado.getString("fechaNacimiento"),resultado.getString("telefono"),
                         resultado.getString("direccion"),resultado.getString("ciudad"),
@@ -87,7 +85,6 @@ public class Mecanicos {
                         formatter.format(Integer.parseInt(resultado.getString("puntosCarnet"))) + " Puntos",resultado.getString("salario"),
                         resultado.getString("numSS"),resultado.getString("titulacion"),
                         resultado.getString("fechaContratacion"));
-            }
             tabla.print();
             conexion.close();
         }catch (Exception e){

@@ -62,18 +62,18 @@ public class Coches {
             Coches c = new Coches(matricula);
             sentencia.setString(1, c.getMatricula());
             ResultSet resultado = sentencia.executeQuery();
+            System.out.println(resultado);
             if (resultado.next() == false){
                 System.out.println("Error, No existe ningún coche con Matrícula: " + matricula);
                 return;
             }
             TableList tabla = table();
-            while(resultado.next()){
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("numeroBastidor"),
                         resultado.getString("marca") + " " +  resultado.getString("modelo"),
                         resultado.getString("añoFabricacion"), resultado.getString("color"),
                         resultado.getString("numeroPlazas"),resultado.getString("numeroPuertas"),
                         resultado.getString("grandariaMaletero") + "L",resultado.getString("combustible"));
-            }
+
             tabla.print();
             conexion.close();
         }catch (Exception e){

@@ -60,12 +60,10 @@ public class MantenimientoCoches {
                 return;
             }
             TableList tabla = table();
-            while(resultado.next()){
-                //Sacamos los resultados
                 tabla.addRow(resultado.getString("matricula"), resultado.getString("marca") + " " + resultado.getString("modelo"),
                         resultado.getString("dni"), resultado.getString("nombreCompleto"),
                         resultado.getString("fechaInMantenimiento"), resultado.getString("fechaFiMantenimiento"));
-            }
+
             tabla.print();
             conexion.close();
         }catch (Exception e){
