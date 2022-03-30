@@ -1,3 +1,5 @@
+import com.mysql.cj.xdevapi.Table;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -108,6 +110,75 @@ public class Coches {
                         resultado.getString("grandariaMaletero") + "L",resultado.getString("combustible"));
             }
             tabla.print();
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public static void insertarRegistro(){
+        try{
+            String matricula, numeroBastidor, marca, modelo, color, combustible, añoFabricacion,  numeroPlazas,  numeroPuertas,  grandariaMaletero;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "insert into coches (matricula,numeroBastidor,marca,modelo,añoFabricacion,color,numeroPlazas,numeroPuertas,grandariaMaletero,combustible) values(?,?,?,?,?,?,?,?,?,?);";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la Matrícula: ");
+            matricula = scanner.next();
+            System.out.printf("Introduce el Nº de Bastidor [17 Caracteres]: ");
+            numeroBastidor = scanner.next();
+            System.out.printf("Introduce la Marca del Vehículo: ");
+            marca = scanner.next();
+            System.out.printf("Introduce el Modelo del Vehículo: ");
+            modelo = scanner.next();
+            System.out.printf("Introduce el Año de Fabricación [Formato: YYYY]: ");
+            añoFabricacion = scanner.next();
+            System.out.printf("Introduce el Color del vehículo: ");
+            color = scanner.next();
+            System.out.printf("Numero de plazas del vehículo: ");
+            numeroPlazas = scanner.next();
+
+            System.out.printf("Numero de Puertas del vehículo: ");
+            numeroPuertas = scanner.next();
+            System.out.printf("Grandaria del Maletero: ");
+            grandariaMaletero = scanner.next();
+            TableList tablaCombustible = new TableList(2,"Valor", "Tipo de Combustible").sortBy(0).withUnicode(true);
+            tablaCombustible.addRow("1","Gasolina");
+            tablaCombustible.addRow("2","Diésel");
+            System.out.println("Inserta el combustible: ");
+            tablaCombustible.print();
+            System.out.printf("Selecciona una opción: ");
+            combustible = scanner.next();
+            switch(combustible){
+                case "1":
+                    combustible = "Gasolina";
+                    break;
+                case "2":
+                    combustible = "Diésel";
+                    break;
+                default:
+                    System.out.println("Error no has introducido una opción válida.");
+                    System.out.println("Se ha aplicado el valor Gasolina por defecto.");
+                    combustible = "Gasolina";
+                    break;
+            }
+            try{
+                Coches c = new Coches(matricula,numeroBastidor,marca,modelo,Integer.parseInt(añoFabricacion),color,Integer.parseInt(numeroPlazas)
+                        ,Integer.parseInt(numeroPuertas),Integer.parseInt(grandariaMaletero),combustible);
+                sentencia.setString(1, c.getMatricula());
+                sentencia.setString(2, c.getNumeroBastidor());
+                sentencia.setString(3, c.getMarca());
+                sentencia.setString(4, c.getModelo());
+                sentencia.setInt(5, c.getAñoFabricacion());
+                sentencia.setString(6, c.getColor());
+                sentencia.setInt(7, c.getNumeroPlazas());
+                sentencia.setInt(8, c.getNumeroPuertas());
+                sentencia.setInt(9, c.getGrandariaMaletero());
+                sentencia.setString(10, c.getCombustible());
+                int row = sentencia.executeUpdate();
+                System.out.println("Se ha insertado el cliente correctamente");
+            }catch(Exception e){
+                System.out.println("Error, no se ha podido instanciar el vehículo, alguno de los datos introducidos era .");
+            }
             conexion.close();
         }catch (Exception e){
             System.out.println(e);

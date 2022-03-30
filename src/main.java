@@ -106,6 +106,10 @@ public class main {
                                 Coches.listarPorAsientos();
                                 pause();
                                 break;
+                            case "4":
+                                Coches.insertarRegistro();
+                                pause();
+                                break;
                             case "5":
                                 Coches.eliminarRegistro();
                                 pause();
