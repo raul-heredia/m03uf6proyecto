@@ -162,7 +162,7 @@ public class Clientes {
             TableList tablaAntes = table();
             tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email, Integer.toString(puntosCarnet));
             tablaAntes.print();
-
+            main.pause();
             System.out.printf("Nuevo Nombre [Deja en blanco para no modificar]: ");
             nombreCompletoMod = scanner.next();
             if (nombreCompletoMod.isEmpty()) nombreCompletoMod = nombreCompleto; // Si esta vacio le aplicamos el que estaba guardado

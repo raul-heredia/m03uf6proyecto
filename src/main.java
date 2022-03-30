@@ -111,6 +111,10 @@ public class main {
                                 pause();
                                 break;
                             case "5":
+                                Coches.modificarRegistro();
+                                pause();
+                                break;
+                            case "6":
                                 Coches.eliminarRegistro();
                                 pause();
                                 break;

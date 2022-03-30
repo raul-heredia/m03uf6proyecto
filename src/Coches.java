@@ -175,9 +175,113 @@ public class Coches {
                 sentencia.setInt(9, c.getGrandariaMaletero());
                 sentencia.setString(10, c.getCombustible());
                 int row = sentencia.executeUpdate();
-                System.out.println("Se ha insertado el cliente correctamente");
+                System.out.println("Se ha insertado el vehículo correctamente");
             }catch(Exception e){
                 System.out.println("Error, no se ha podido instanciar el vehículo, alguno de los datos introducidos era .");
+            }
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public static void modificarRegistro(){
+        try{
+            String matricula, numeroBastidor, marca, modelo, color, combustible, añoFabricacion,  numeroPlazas,  numeroPuertas,  grandariaMaletero;
+            String numeroBastidorMod, marcaMod, modeloMod, colorMod, combustibleMod, añoFabricacionMod,  numeroPlazasMod,  numeroPuertasMod,  grandariaMaleteroMod;
+
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String preConsulta = "SELECT * FROM coches WHERE matricula = ?";
+            String consulta = "UPDATE coches SET numeroBastidor = ?, marca = ?, modelo = ?," +
+                    " añoFabricacion = ?, color = ?, numeroPlazas = ?, numeroPuertas = ?, grandariaMaletero = ?," +
+                    " combustible = ? WHERE matricula = ?";
+
+            PreparedStatement preSentencia = conexion.prepareStatement(preConsulta);
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la matrícula del coche: ");
+            matricula = scanner.next();
+            preSentencia.setString(1, matricula);
+            ResultSet resultado = preSentencia.executeQuery();
+
+            if (resultado.next() == false){
+                System.out.println("Error, No existe ningún vehículo con matrícula: " + matricula);
+                return;
+            }
+            numeroBastidor = resultado.getString("numeroBastidor");
+            marca = resultado.getString("marca");
+            modelo = resultado.getString("modelo");
+            color = resultado.getString("color");
+            combustible = resultado.getString("combustible");
+            añoFabricacion = resultado.getString("añoFabricacion");
+            numeroPlazas = resultado.getString("numeroPlazas");
+            numeroPuertas = resultado.getString("numeroPuertas");
+            grandariaMaletero = resultado.getString("grandariaMaletero");
+
+            System.out.println("---- DATOS DEL VEHÍCULO ANTES DE MODIFICAR ----");
+            TableList tablaAntes = table();
+            tablaAntes.addRow(matricula, numeroBastidor, marca + " " + modelo, añoFabricacion,color, numeroPlazas, numeroPuertas, grandariaMaletero + "L",combustible);
+            tablaAntes.print();
+            main.pause();
+
+            System.out.printf("Introduce el Nº de Bastidor [Deja en blanco para no modificar]: ");
+            numeroBastidorMod = scanner.next();
+            if (numeroBastidorMod.isEmpty()) numeroBastidorMod = numeroBastidor; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Introduce la Marca del Vehículo [Deja en blanco para no modificar]: ");
+            marcaMod = scanner.next();
+            if (marcaMod.isEmpty()) marcaMod = marca; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Introduce el Modelo del Vehículo [Deja en blanco para no modificar]: ");
+            modeloMod = scanner.next();
+            if (modeloMod.isEmpty()) modeloMod = modelo; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Introduce el Año de Fabricación [Formato: YYYY] [Deja en blanco para no modificar]: ");
+            añoFabricacionMod = scanner.next();
+            if (añoFabricacionMod.isEmpty()) añoFabricacionMod = añoFabricacion; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Introduce el Color del vehículo [Deja en blanco para no modificar]: ");
+            colorMod = scanner.next();
+            if (colorMod.isEmpty()) colorMod = color; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Numero de plazas del vehículo [Deja en blanco para no modificar]: ");
+            numeroPlazasMod = scanner.next();
+            if (numeroPlazasMod.isEmpty()) numeroPlazasMod = numeroPlazas; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Numero de Puertas del vehículo [Deja en blanco para no modificar]: ");
+            numeroPuertasMod = scanner.next();
+            if (numeroPuertasMod.isEmpty()) numeroPuertasMod = numeroPuertas; // Si esta vacio le aplicamos el que estaba guardado
+            System.out.printf("Grandaria del Maletero [Deja en blanco para no modificar]: ");
+            grandariaMaleteroMod = scanner.next();
+            if (grandariaMaleteroMod.isEmpty()) grandariaMaleteroMod = grandariaMaletero;
+            TableList tablaCombustible = new TableList(2,"Valor", "Tipo de Combustible").sortBy(0).withUnicode(true);
+            tablaCombustible.addRow("1","Gasolina");
+            tablaCombustible.addRow("2","Diésel");
+            System.out.println("Inserta el combustible: ");
+            tablaCombustible.print();
+            System.out.printf("Selecciona una opción [Deja en blanco para no modificar]: ");
+            combustibleMod = scanner.next();
+            switch(combustibleMod){
+                case "1":
+                    combustibleMod = "Gasolina";
+                    break;
+                case "2":
+                    combustibleMod = "Diésel";
+                    break;
+                default:
+                    combustibleMod = combustible;
+                    break;
+            }
+            try{
+                Coches c = new Coches(matricula,numeroBastidorMod,marcaMod,modeloMod,Integer.parseInt(añoFabricacionMod),colorMod,Integer.parseInt(numeroPlazasMod)
+                        ,Integer.parseInt(numeroPuertasMod),Integer.parseInt(grandariaMaleteroMod),combustibleMod);
+                sentencia.setString(1, c.getNumeroBastidor());
+                sentencia.setString(2, c.getMarca());
+                sentencia.setString(3, c.getModelo());
+                sentencia.setInt(4, c.getAñoFabricacion());
+                sentencia.setString(5, c.getColor());
+                sentencia.setInt(6, c.getNumeroPlazas());
+                sentencia.setInt(7, c.getNumeroPuertas());
+                sentencia.setInt(8, c.getGrandariaMaletero());
+                sentencia.setString(9, c.getCombustible());
+                sentencia.setString(10, c.getMatricula());
+                int row = sentencia.executeUpdate();
+                System.out.println("Se ha actualizado el registro correctamente");
+            }catch(Exception e){
+                System.out.println("Error, no se ha podido actualizar el vehículo, alguno de los datos introducidos era .");
             }
             conexion.close();
         }catch (Exception e){
