@@ -94,6 +94,7 @@ public class Coches {
                 asientos = scanner.nextInt();
             }catch(Exception e){
                 asientos = 0;
+                scanner.next();
             }
             sentencia.setInt(1, asientos);
             ResultSet resultado = sentencia.executeQuery();

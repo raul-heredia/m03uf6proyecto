@@ -108,6 +108,7 @@ public class Clientes {
             }catch(Exception e){
                 System.out.println("Error no has introducido un número válido.");
                 System.out.println("Se ha aplicado el valor 0 por defecto.");
+                scanner.next();
             }
 
             Clientes c = new Clientes(dni,nombre,fechaNacimiento,telefono,direccion,ciudad,pais,email,puntosCarnet);
@@ -195,6 +196,7 @@ public class Clientes {
                 puntosCarnetMod = scanner.nextInt();
             }catch(Exception e){
                 puntosCarnetMod = puntosCarnet;
+                scanner.next();
             }
             Clientes c = new Clientes(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod,puntosCarnetMod);
             sentencia.setString(1, c.getNombreCompleto());

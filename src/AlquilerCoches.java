@@ -163,11 +163,13 @@ public class AlquilerCoches {
             }catch(Exception e){
                 System.out.println("Error, numero de dias no valido, se ha aplicado el valor 1 por defecto");
                 numeroDias = 1;
+                scanner.next();
             }System.out.printf("Precio por día: ");
             try{
                 precioPorDia = scanner.nextDouble();
             }catch(Exception e){
                 System.out.println("Error, precio por día no valido, se ha aplicado el valor 50.00 por defecto");
+                scanner.next();
             }
             TableList tLugarDevolucion = new TableList(2,"Valor", "Ciudad").sortBy(0).withUnicode(true);
             tLugarDevolucion.addRow("1","Barcelona");
@@ -216,6 +218,7 @@ public class AlquilerCoches {
                 }
             }catch(Exception e){
                 System.out.println("Error, no se ha introducido un número válido, se ha aplicado el valor 0 por defecto");
+                scanner.next();
             }
 
             AlquilerCoches a = new AlquilerCoches(matricula, dni, lugarDevolucion, tipoSeguro, numeroDias,precioPorDia,isRetornDipositPle);
@@ -231,7 +234,7 @@ public class AlquilerCoches {
             System.out.println("Se ha alquilado el coche correctamente");
             conexion.close();
         }catch (Exception e){
-            System.out.println(e);
+            System.out.println("Error, no se ha podido insertar el registro, comprueba que los datos introducidos son correctos");
         }
     }
 

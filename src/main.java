@@ -183,6 +183,10 @@ public class main {
                                 Mecanicos.listarUno();
                                 pause();
                                 break;
+                            case "3":
+                                //Mecanicos.insertarRegistro();
+                                pause();
+                                break;
                             case "5":
                                 Mecanicos.eliminarRegistro();
                                 pause();
