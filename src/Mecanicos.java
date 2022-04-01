@@ -155,13 +155,18 @@ public class Mecanicos {
             sentencia.setString(8, m.getEmail());
             sentencia.setString(9, m.getTitulacion());
             sentencia.setString(10, m.getFechaContratacion());
+            sentencia.setInt(11, m.getPuntosCarnet());
+            sentencia.setInt(12, m.getNumSS());
+            sentencia.setDouble(13, m.getSalario());
+
             int row = sentencia.executeUpdate();
-            System.out.println("Se ha insertado el cliente correctamente");
+            System.out.println("Se ha insertado el Mecanico correctamente");
             conexion.close();
         }catch (Exception e){
             System.out.println(e);
         }
     }
+
 
     public static void eliminarRegistro(){
         try{

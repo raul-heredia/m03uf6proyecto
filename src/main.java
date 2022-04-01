@@ -184,7 +184,7 @@ public class main {
                                 pause();
                                 break;
                             case "3":
-                                //Mecanicos.insertarRegistro();
+                                Mecanicos.insertarRegistro();
                                 pause();
                                 break;
                             case "5":

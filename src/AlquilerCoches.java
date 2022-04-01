@@ -151,6 +151,9 @@ public class AlquilerCoches {
             double precioPorDia = 50;
 
             Connection conexion = (Connection) Conexion.conectarBd();
+
+            //String isCoche
+
             String consulta = "insert into alquilercoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values(?,?,?,?,?,?,?,?);";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
             System.out.printf("Introduce la Matrícula del Vehículo: ");
