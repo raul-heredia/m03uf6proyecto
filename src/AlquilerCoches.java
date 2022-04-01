@@ -4,6 +4,7 @@ import java.util.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 
 public class AlquilerCoches {
     private String matricula, dni, lugarDevolucion, tipoSeguro, fechaInico, fechaFinal;
@@ -149,7 +150,7 @@ public class AlquilerCoches {
             String matricula, dni, lugarDevolucion, tipoSeguro;
             int numeroDias, isRetornDipositPle = 1;
             double precioPorDia = 50;
-
+            boolean isCochePrestadoAhora = false;
             Connection conexion = (Connection) Conexion.conectarBd();
 
             String coche = "SELECT * FROM coches where matricula = ?";
@@ -173,6 +174,23 @@ public class AlquilerCoches {
             if (!resultCoche.next()){
                 System.out.println("Error, El coche solicitado no existe");
                 return;
+            }
+            sentenciaPrestado.setString(1, matricula);
+            ResultSet resultPrestado = sentenciaPrestado.executeQuery();
+            while(resultPrestado.next()){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                Date fechaFinal = sdf.parse(resultPrestado.getString("fechaFInal"));
+                Date hoy = new Date();
+                long diff = hoy.getTime() - fechaFinal.getTime();
+                TimeUnit time = TimeUnit.DAYS;
+                long diferencia = time.convert(diff, TimeUnit.MILLISECONDS);
+                if(diferencia <= 0){
+                    isCochePrestadoAhora = true;
+                }
+                if(isCochePrestadoAhora){
+                    System.out.println("Error, el vehículo solicitado se encuentra en prestamo actualmente");
+                    return;
+                }
             }
             System.out.printf("Introduce el DNI del cliente: ");
             dni = scanner.next();

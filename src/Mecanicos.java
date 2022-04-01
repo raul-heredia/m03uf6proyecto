@@ -202,9 +202,9 @@ public class Mecanicos {
             numSS = Integer.parseInt(resultado.getString("numSS"));
             salario = Double.parseDouble(resultado.getString("salario"));
 
-            /*System.out.println("---- DATOS CLIENTE ANTES DE MODIFICAR ----");
+            System.out.println("---- DATOS CLIENTE ANTES DE MODIFICAR ----");
             TableList tablaAntes = table();
-            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email, Integer.toString(puntosCarnet));
+            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email, titulacion, fechaContratacion, Integer.toString(puntosCarnet), Integer.toString(numSS), Double.parseDouble(salario));
             tablaAntes.print();
             main.pause();
             System.out.printf("Nuevo Nombre [Deja en blanco para no modificar]: ");
@@ -235,6 +235,14 @@ public class Mecanicos {
             emailMod = scanner.next();
             if (emailMod.isEmpty()) emailMod = email; // Si esta vacio le aplicamos el que estaba guardado
 
+            System.out.printf("Nueva Titulacion [Deja en blanco para no modificar]: ");
+            titulacionMod = scanner.next();
+            if (titulacionMod.isEmpty()) titulacionMod = titulacion; // Si esta vacio le aplicamos el que estaba guardado
+
+            System.out.printf("Nueva Fecha Contratacion [Deja en blanco para no modificar]: ");
+            fechaContratacionMod = scanner.next();
+            if (fechaContratacionMod.isEmpty()) fechaContratacionMod = fechaContratacion; // Si esta vacio le aplicamos el que estaba guardado
+
             System.out.printf("Nuevos Puntos del Carnet [Deja en blanco para no modificar]: ");
             try{
                 puntosCarnetMod = scanner.nextInt();
@@ -242,20 +250,37 @@ public class Mecanicos {
                 puntosCarnetMod = puntosCarnet;
                 scanner.next();
             }
-            Clientes c = new Clientes(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod,puntosCarnetMod);
-            sentencia.setString(1, c.getNombreCompleto());
-            sentencia.setString(2, c.getFechaNacimiento());
-            sentencia.setString(3, c.getTelefono());
-            sentencia.setString(4, c.getDireccion());
-            sentencia.setString(5, c.getCiudad());
-            sentencia.setString(6, c.getPais());
-            sentencia.setString(7, c.getEmail());
-            sentencia.setInt(8, c.getPuntosCarnet());
-            sentencia.setString(9, c.getDni());
+            System.out.printf("Nuevo Numero de la Seguridad Social[Deja en blanco para no modificar]: ");
+            try{
+                numSSMod = scanner.nextInt();
+            }catch(Exception e){
+                numSSMod = numSS;
+                scanner.next();
+            }
+            System.out.printf("Nuevo Salario[Deja en blanco para no modificar]: ");
+            try{
+                salarioMod = scanner.nextInt();
+            }catch(Exception e){
+                salarioMod = salario;
+                scanner.next();
+            }
+            Mecanicos m = new Mecanicos(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod, titulacionMod, fechaContratacionMod, puntosCarnetMod, numSSMod, salarioMod);
+            sentencia.setString(1, m.getNombreCompleto());
+            sentencia.setString(2, m.getFechaNacimiento());
+            sentencia.setString(3, m.getTelefono());
+            sentencia.setString(4, m.getDireccion());
+            sentencia.setString(5, m.getCiudad());
+            sentencia.setString(6, m.getPais());
+            sentencia.setString(7, m.getEmail());
+            sentencia.setString(8, m.getTitulacion());
+            sentencia.setString(9, m.getFechaContratacion());
+            sentencia.setInt(10, m.getPuntosCarnet());
+            sentencia.setInt(11, m.getNumSS());
+            sentencia.setDouble(12, m.getSalario());
+            sentencia.setString(13, m.getDni());
             int row = sentencia.executeUpdate();
             System.out.println("Se ha modificado el registro correctamente");
             conexion.close();
-             */
         }catch (Exception e){
             System.out.println(e);
         }
