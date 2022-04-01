@@ -152,14 +152,36 @@ public class AlquilerCoches {
 
             Connection conexion = (Connection) Conexion.conectarBd();
 
-            //String isCoche
+            String coche = "SELECT * FROM coches where matricula = ?";
+
+            String cliente = "SELECT * FROM clientes where dni = ?";
+
+            String isCochePrestado = "SELECT fechaFinal FROM alquilercoches where matricula = ?";
+
+            PreparedStatement sentenciaCoche = conexion.prepareStatement(coche);
+
+            PreparedStatement sentenciaPrestado = conexion.prepareStatement(isCochePrestado);
+
+            PreparedStatement sentenciaIsCliente = conexion.prepareStatement(cliente);
 
             String consulta = "insert into alquilercoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values(?,?,?,?,?,?,?,?);";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
             System.out.printf("Introduce la Matrícula del Vehículo: ");
             matricula = scanner.next();
+            sentenciaCoche.setString(1, matricula);
+            ResultSet resultCoche = sentenciaCoche.executeQuery();
+            if (!resultCoche.next()){
+                System.out.println("Error, El coche solicitado no existe");
+                return;
+            }
             System.out.printf("Introduce el DNI del cliente: ");
             dni = scanner.next();
+            sentenciaIsCliente.setString(1, dni);
+            ResultSet resultCliente = sentenciaIsCliente.executeQuery();
+            if (!resultCliente.next()){
+                System.out.println("Error, El cliente solicitado no existe");
+                return;
+            }
             System.out.printf("Nº de días: ");
             try{
                 numeroDias = scanner.nextInt();
