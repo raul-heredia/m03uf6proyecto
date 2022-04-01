@@ -121,7 +121,7 @@ public class AlquilerCoches {
             System.out.printf("Introduce la matrícula del coche alquilado: ");
             matricula = scanner.next();
             AlquilerCoches a = new AlquilerCoches(matricula, "");
-            sentencia.setString(1, matricula);
+            sentencia.setString(1, a.getMatricula());
             ResultSet resultado = sentencia.executeQuery();
             if (resultado.next() == false){
                 System.out.println("Error, No hemos encontrado ningún alquiler asociado al coche con matrícula: " + matricula);
@@ -146,6 +146,26 @@ public class AlquilerCoches {
         }
     }
 
+    public static void eliminarRegistro(){
+        try{
+            String matricula, dni;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "DELETE FROM alquilercoches where matricula = ? AND dni = ?";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la Matrícula del coche: ");
+            matricula = scanner.next();
+            System.out.printf("Introduce el DNI del Cliente: ");
+            dni = scanner.next();
+            AlquilerCoches a = new AlquilerCoches(matricula,dni);
+            sentencia.setString(1, a.getMatricula());
+            sentencia.setString(2, a.getDni());
+            int row = sentencia.executeUpdate();
+            System.out.println("Registro eliminado correctamente");
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
 
     public String getMatricula() {
         return matricula;

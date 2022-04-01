@@ -152,6 +152,10 @@ public class main {
                                 AlquilerCoches.listarPorMatricula();
                                 pause();
                                 break;
+                            case "7":
+                                AlquilerCoches.eliminarRegistro();
+                                pause();
+                                break;
                             default:
                                 error();
                         }
