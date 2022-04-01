@@ -16,11 +16,6 @@ public class main {
         String op1="";
         String op2="";
 
-        System.out.println("Bienvenido a la tienda virtual supermercados Exito");
-        System.out.println("seleccione una categoria de su interes.");
-
-
-
         do {
             System.out.println("---- Selecciona una Opción ----");
             System.out.println("1 - Gestión Clientes");
@@ -146,6 +141,10 @@ public class main {
                                 break;
                             case "2":
                                 AlquilerCoches.listarUno();
+                                pause();
+                                break;
+                            case "5":
+                                AlquilerCoches.insertarRegistro();
                                 pause();
                                 break;
                             case "3":
