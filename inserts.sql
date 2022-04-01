@@ -21,8 +21,10 @@ insert into coches (matricula,numeroBastidor,marca,modelo,añoFabricacion,color,
 
 # alquilerCoches
 insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("B8452LD","21761046X","2022-03-26","2022-04-02",85,"Barcelona",0,"Franquícia");
+insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("B1123CS","21761046X","2022-02-26","2022-03-02",239,"Barcelona",0,"Franquícia");
 insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("B2254CL","92681529Q","2022-03-26","2022-03-31",92,"Barcelona",0,"Franquícia");
-insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("M2769ZP","15206819R","2022-03-26","2022-03-27",55,"Barcelona",0,"Sin Franquícia");
+insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("M2769ZP","15206819R","2022-03-26","2022-03-27",55,"Barcelona",1,"Sin Franquícia");
+insert into alquilerCoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values("M2769ZP","29489507B","2022-03-20","2022-03-25",55,"Barcelona",1,"Sin Franquícia");
 
 # mecanicos
 insert into mecanicos (dni,nombreCompleto,fechaNacimiento,telefono,direccion,ciudad,pais,email,puntosCarnet,salario,numSS,titulacion,fechaContratacion) values("25256867S","Paco Sanz Bullo","1969-07-12","662113365","C/ Valencia 680","Barcelona","España","paco.sanz@gmail.com",15,1899.12,123785964212,"CFGS Automoción","1990-04-12");	

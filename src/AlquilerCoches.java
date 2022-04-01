@@ -107,6 +107,44 @@ public class AlquilerCoches {
             System.out.println(e);
         }
     }
+    public static void listarPorMatricula(){
+        try{
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String matricula;
+            String consulta = "SELECT alquilercoches.matricula, alquilercoches.dni, alquilercoches.fechaInicio," +
+            "alquilercoches.fechaFinal,alquilercoches.precioPorDia,alquilercoches.lugarDevolucion,alquilercoches.isRetornDipositPle," +
+                    "alquilercoches.tipoSeguro, clientes.nombreCompleto, coches.marca, coches.modelo FROM alquilercoches " +
+                    "INNER JOIN clientes ON alquilerCoches.dni = clientes.dni INNER JOIN coches ON alquilerCoches.matricula = coches.matricula " +
+                    "WHERE alquilercoches.matricula = ?";
+
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la matrícula del coche alquilado: ");
+            matricula = scanner.next();
+            AlquilerCoches a = new AlquilerCoches(matricula, "");
+            sentencia.setString(1, matricula);
+            ResultSet resultado = sentencia.executeQuery();
+            if (resultado.next() == false){
+                System.out.println("Error, No hemos encontrado ningún alquiler asociado al coche con matrícula: " + matricula);
+                return;
+            }
+            TableList tabla = table();
+            while(resultado.next()){
+                String isDeposito = "No";
+                if(resultado.getString("isRetornDipositPle").equals("1")){
+                    isDeposito = "Sí";
+                }
+                tabla.addRow(resultado.getString("matricula"),resultado.getString("marca") + " " +
+                                resultado.getString("modelo") , resultado.getString("dni"),
+                        resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
+                        resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
+                        resultado.getString("lugarDevolucion"),isDeposito,resultado.getString("tipoSeguro"));
+            }
+            tabla.print();
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
 
 
     public String getMatricula() {

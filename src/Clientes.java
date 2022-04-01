@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Clientes {
     private String dni, nombreCompleto, fechaNacimiento,telefono, direccion, ciudad, pais, email;
     private int puntosCarnet;
-
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
     private static final DecimalFormat formatter = new DecimalFormat("00");
 

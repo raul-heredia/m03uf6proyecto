@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Mecanicos {
 
-    String dni, nombreCompleto, fechaNacimiento, telefono, direccion,ciudad,pais,email,titulacion, fechaContratacion;
-    int puntosCarnet, numSS;
-    double salario;
+    private String dni, nombreCompleto, fechaNacimiento, telefono, direccion,ciudad,pais,email,titulacion, fechaContratacion;
+    private int puntosCarnet, numSS;
+    private double salario;
 
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
     private static final DecimalFormat formatter = new DecimalFormat("00");
@@ -86,6 +86,24 @@ public class Mecanicos {
                         resultado.getString("numSS"),resultado.getString("titulacion"),
                         resultado.getString("fechaContratacion"));
             tabla.print();
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public static void eliminarRegistro(){
+        try{
+            String dni;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "DELETE FROM mecanicos where dni = ?";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce el DNI a eliminar: ");
+            dni = scanner.next();
+            Mecanicos m = new Mecanicos(dni);
+            sentencia.setString(1, m.getDni());
+            int row = sentencia.executeUpdate();
+            System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
             System.out.println(e);

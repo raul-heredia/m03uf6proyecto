@@ -7,8 +7,8 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Coches {
-    int añoFabricacion, numeroPlazas, numeroPuertas,grandariaMaletero;
-    String matricula,numeroBastidor,marca,modelo,color,combustible;
+    private int añoFabricacion, numeroPlazas, numeroPuertas,grandariaMaletero;
+    private String matricula,numeroBastidor,marca,modelo,color,combustible;
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
     public Coches(String matricula) {

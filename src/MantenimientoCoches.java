@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class MantenimientoCoches {
 
-    String matricula,dni,fechaInMantenimiento,fechaFiMantenimiento;
+    private String matricula,dni,fechaInMantenimiento,fechaFiMantenimiento;
 
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
