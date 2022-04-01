@@ -216,6 +216,10 @@ public class main {
                                 MantenimientoCoches.listarUno();
                                 pause();
                                 break;
+                            case "5":
+                                MantenimientoCoches.eliminarRegistro();
+                                pause();
+                                break;
                             default:
                                 error();
                         }

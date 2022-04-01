@@ -11,6 +11,18 @@ public class MantenimientoCoches {
 
     private static final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
+    public MantenimientoCoches(String matricula, String dni) {
+        this.matricula = matricula;
+        this.dni = dni;
+    }
+
+    public MantenimientoCoches(String matricula, String dni, String fechaInMantenimiento, String fechaFiMantenimiento) {
+        this.matricula = matricula;
+        this.dni = dni;
+        this.fechaInMantenimiento = fechaInMantenimiento;
+        this.fechaFiMantenimiento = fechaFiMantenimiento;
+    }
+
     public static TableList table(){
         return new TableList(6,"Matrícula","Marca y Modelo","DNI","Nombre Completo Mecánico","Fecha de Inicio Mantenimiento","Fecha Fin del Mantenimiento").sortBy(0).withUnicode(true);
     }
@@ -51,9 +63,9 @@ public class MantenimientoCoches {
             matricula = scanner.next();
             System.out.printf("Introduce el DNI del mecánico: ");
             dni = scanner.next();
-            AlquilerCoches a = new AlquilerCoches(matricula, dni);
-            sentencia.setString(1, a.getMatricula());
-            sentencia.setString(2, a.getDni());
+            MantenimientoCoches m = new MantenimientoCoches(matricula, dni);
+            sentencia.setString(1, m.getMatricula());
+            sentencia.setString(2, m.getDni());
             ResultSet resultado = sentencia.executeQuery();
             if (resultado.next() == false){
                 System.out.println("Error, No hemos encontrado ningún registro con los datos seleccionados");
@@ -69,5 +81,59 @@ public class MantenimientoCoches {
         }catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    public static void eliminarRegistro(){
+        try{
+            String matricula, dni;
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String consulta = "DELETE FROM mantenimientocoches where matricula = ? AND dni = ?";
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+            System.out.printf("Introduce la Matrícula del coche: ");
+            matricula = scanner.next();
+            System.out.printf("Introduce el DNI del mecánico: ");
+            dni = scanner.next();
+            MantenimientoCoches m = new MantenimientoCoches(matricula,dni);
+            sentencia.setString(1, m.getMatricula());
+            sentencia.setString(2, m.getDni());
+            int row = sentencia.executeUpdate();
+            System.out.println("Registro eliminado correctamente");
+            conexion.close();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getFechaInMantenimiento() {
+        return fechaInMantenimiento;
+    }
+
+    public void setFechaInMantenimiento(String fechaInMantenimiento) {
+        this.fechaInMantenimiento = fechaInMantenimiento;
+    }
+
+    public String getFechaFiMantenimiento() {
+        return fechaFiMantenimiento;
+    }
+
+    public void setFechaFiMantenimiento(String fechaFiMantenimiento) {
+        this.fechaFiMantenimiento = fechaFiMantenimiento;
     }
 }
