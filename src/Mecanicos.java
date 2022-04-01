@@ -170,10 +170,10 @@ public class Mecanicos {
         try{
             String dni, nombreCompleto,  fechaNacimiento,  telefono,  direccion,  ciudad,  pais,  email,  titulacion,  fechaContratacion;
             int puntosCarnet = 0, numSS= 0;
-            double salario = 0;
+            String salario;
             String nombreCompletoMod, fechaNacimientoMod,telefonoMod, direccionMod, ciudadMod, paisMod, emailMod, titulacionMod, fechaContratacionMod;
             int puntosCarnetMod, numSSMod;
-            double salarioMod;
+            String salarioMod;
             Connection conexion = (Connection) Conexion.conectarBd();
             String preConsulta = "SELECT * FROM mecanicos WHERE dni = ?";
             String consulta = "UPDATE mecanicos SET nombrecompleto = ?, fechaNacimiento = ?, telefono = ?, direccion = ?," +
@@ -196,15 +196,15 @@ public class Mecanicos {
             ciudad = resultado.getString("ciudad");
             pais = resultado.getString("pais");
             email = resultado.getString("email");
+            puntosCarnet = Integer.parseInt(resultado.getString("puntosCarnet"));
+            salario = resultado.getString("salario");
+            numSS = Integer.parseInt(resultado.getString("numSS"));
             titulacion = resultado.getString("titulacion");
             fechaContratacion = resultado.getString("fechaContratacion");
-            puntosCarnet = Integer.parseInt(resultado.getString("puntosCarnet"));
-            numSS = Integer.parseInt(resultado.getString("numSS"));
-            salario = Double.parseDouble(resultado.getString("salario"));
 
             System.out.println("---- DATOS CLIENTE ANTES DE MODIFICAR ----");
             TableList tablaAntes = table();
-            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email, titulacion, fechaContratacion, Integer.toString(puntosCarnet), Integer.toString(numSS), Double.parseDouble(salario));
+            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email,  Integer.toString(puntosCarnet), salario, Integer.toString(numSS),  titulacion, fechaContratacion);
             tablaAntes.print();
             main.pause();
             System.out.printf("Nuevo Nombre [Deja en blanco para no modificar]: ");
@@ -259,12 +259,12 @@ public class Mecanicos {
             }
             System.out.printf("Nuevo Salario[Deja en blanco para no modificar]: ");
             try{
-                salarioMod = scanner.nextInt();
+                salarioMod = scanner.next();
             }catch(Exception e){
                 salarioMod = salario;
                 scanner.next();
             }
-            Mecanicos m = new Mecanicos(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod, titulacionMod, fechaContratacionMod, puntosCarnetMod, numSSMod, salarioMod);
+            Mecanicos m = new Mecanicos(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod, titulacionMod, fechaContratacionMod, puntosCarnetMod, numSSMod, Double.parseDouble(salarioMod));
             sentencia.setString(1, m.getNombreCompleto());
             sentencia.setString(2, m.getFechaNacimiento());
             sentencia.setString(3, m.getTelefono());
