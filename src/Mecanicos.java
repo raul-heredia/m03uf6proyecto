@@ -169,15 +169,15 @@ public class Mecanicos {
     public static void modificarRegistro(){
         try{
             String dni, nombreCompleto,  fechaNacimiento,  telefono,  direccion,  ciudad,  pais,  email,  titulacion,  fechaContratacion;
-            int puntosCarnet = 0, numSS= 0;
+            String puntosCarnet, numSS;
             String salario;
             String nombreCompletoMod, fechaNacimientoMod,telefonoMod, direccionMod, ciudadMod, paisMod, emailMod, titulacionMod, fechaContratacionMod;
-            int puntosCarnetMod, numSSMod;
+            String puntosCarnetMod, numSSMod;
             String salarioMod;
             Connection conexion = (Connection) Conexion.conectarBd();
             String preConsulta = "SELECT * FROM mecanicos WHERE dni = ?";
             String consulta = "UPDATE mecanicos SET nombrecompleto = ?, fechaNacimiento = ?, telefono = ?, direccion = ?," +
-                    " ciudad = ?, pais = ?, email = ?, titulacion = ?, puntosCarnet = ? puntosCarnet = ?, numSS = ?, salario = ? WHERE dni = ?";
+                    " ciudad = ?, pais = ?, email = ?, titulacion = ?, puntosCarnet = ?, fechaContratacion = ?, numSS = ?, salario = ? WHERE dni = ?";
             PreparedStatement preSentencia = conexion.prepareStatement(preConsulta);
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
             System.out.printf("Introduce el DNI: ");
@@ -196,15 +196,15 @@ public class Mecanicos {
             ciudad = resultado.getString("ciudad");
             pais = resultado.getString("pais");
             email = resultado.getString("email");
-            puntosCarnet = Integer.parseInt(resultado.getString("puntosCarnet"));
+            puntosCarnet = resultado.getString("puntosCarnet");
             salario = resultado.getString("salario");
-            numSS = Integer.parseInt(resultado.getString("numSS"));
+            numSS = resultado.getString("numSS");
             titulacion = resultado.getString("titulacion");
             fechaContratacion = resultado.getString("fechaContratacion");
 
             System.out.println("---- DATOS CLIENTE ANTES DE MODIFICAR ----");
             TableList tablaAntes = table();
-            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email,  Integer.toString(puntosCarnet), salario, Integer.toString(numSS),  titulacion, fechaContratacion);
+            tablaAntes.addRow(dni, nombreCompleto, fechaNacimiento, telefono, direccion, ciudad, pais, email,  puntosCarnet, salario, numSS,  titulacion, fechaContratacion);
             tablaAntes.print();
             main.pause();
             System.out.printf("Nuevo Nombre [Deja en blanco para no modificar]: ");
@@ -213,7 +213,7 @@ public class Mecanicos {
 
             System.out.printf("Nueva Fecha de Nacimiento [Formato YYYY-MM-DD] [Deja en blanco para no modificar]: ");
             fechaNacimientoMod = scanner.next();
-            if (nombreCompletoMod.isEmpty()) fechaNacimientoMod = fechaNacimiento; // Si esta vacio le aplicamos el que estaba guardado
+            if (fechaNacimientoMod.isEmpty()) fechaNacimientoMod = fechaNacimiento; // Si esta vacio le aplicamos el que estaba guardado
 
             System.out.printf("Nuevo Telefono [Deja en blanco para no modificar]: ");
             telefonoMod = scanner.next();
@@ -244,43 +244,35 @@ public class Mecanicos {
             if (fechaContratacionMod.isEmpty()) fechaContratacionMod = fechaContratacion; // Si esta vacio le aplicamos el que estaba guardado
 
             System.out.printf("Nuevos Puntos del Carnet [Deja en blanco para no modificar]: ");
-            try{
-                puntosCarnetMod = scanner.nextInt();
-            }catch(Exception e){
-                puntosCarnetMod = puntosCarnet;
-                scanner.next();
-            }
+            puntosCarnetMod = scanner.next();
+            if (puntosCarnetMod.isEmpty()) puntosCarnetMod = puntosCarnet; // Si esta vacio le aplicamos el que estaba guardado
             System.out.printf("Nuevo Numero de la Seguridad Social[Deja en blanco para no modificar]: ");
-            try{
-                numSSMod = scanner.nextInt();
-            }catch(Exception e){
-                numSSMod = numSS;
-                scanner.next();
-            }
+            numSSMod = scanner.next();
+            if (numSSMod.isEmpty()) numSSMod = numSS; // Si esta vacio le aplicamos el que estaba guardado
             System.out.printf("Nuevo Salario[Deja en blanco para no modificar]: ");
+            salarioMod = scanner.next();
+            if (salarioMod.isEmpty()) salarioMod = salario; // Si esta vacio le aplicamos el que estaba guardado
             try{
-                salarioMod = scanner.next();
+                Mecanicos m = new Mecanicos(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod, titulacionMod, fechaContratacionMod,Integer.parseInt(puntosCarnetMod),Integer.parseInt(numSSMod), Double.parseDouble(salarioMod));
+                sentencia.setString(1, m.getNombreCompleto());
+                sentencia.setString(2, m.getFechaNacimiento());
+                sentencia.setString(3, m.getTelefono());
+                sentencia.setString(4, m.getDireccion());
+                sentencia.setString(5, m.getCiudad());
+                sentencia.setString(6, m.getPais());
+                sentencia.setString(7, m.getEmail());
+                sentencia.setString(8, m.getTitulacion());
+                sentencia.setInt(9, m.getPuntosCarnet());
+                sentencia.setString(10, m.getFechaContratacion());
+                sentencia.setInt(11, m.getNumSS());
+                sentencia.setDouble(12, m.getSalario());
+                sentencia.setString(13, m.getDni());
+                int row = sentencia.executeUpdate();
+                System.out.println("Se ha modificado el registro correctamente");
+                conexion.close();
             }catch(Exception e){
-                salarioMod = salario;
-                scanner.next();
+                System.out.println(e);
             }
-            Mecanicos m = new Mecanicos(dni,nombreCompletoMod,fechaNacimientoMod,telefonoMod,direccionMod,ciudadMod,paisMod,emailMod, titulacionMod, fechaContratacionMod, puntosCarnetMod, numSSMod, Double.parseDouble(salarioMod));
-            sentencia.setString(1, m.getNombreCompleto());
-            sentencia.setString(2, m.getFechaNacimiento());
-            sentencia.setString(3, m.getTelefono());
-            sentencia.setString(4, m.getDireccion());
-            sentencia.setString(5, m.getCiudad());
-            sentencia.setString(6, m.getPais());
-            sentencia.setString(7, m.getEmail());
-            sentencia.setString(8, m.getTitulacion());
-            sentencia.setString(9, m.getFechaContratacion());
-            sentencia.setInt(10, m.getPuntosCarnet());
-            sentencia.setInt(11, m.getNumSS());
-            sentencia.setDouble(12, m.getSalario());
-            sentencia.setString(13, m.getDni());
-            int row = sentencia.executeUpdate();
-            System.out.println("Se ha modificado el registro correctamente");
-            conexion.close();
         }catch (Exception e){
             System.out.println(e);
         }

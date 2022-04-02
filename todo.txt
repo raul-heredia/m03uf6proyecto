@@ -1,10 +1,5 @@
 Alquileres
-	Insertar
-	Modificar
-Mecanicos
-	Insertar
 	Modificar
 Mantenimiento
 	Insertar
 	Modificar
-	Eliminar
