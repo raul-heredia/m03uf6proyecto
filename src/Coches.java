@@ -185,7 +185,6 @@ public class Coches {
             System.out.println(e);
         }
     }
-
     public static void modificarRegistro(){
         try{
             String matricula, numeroBastidor, marca, modelo, color, combustible, añoFabricacion,  numeroPlazas,  numeroPuertas,  grandariaMaletero;

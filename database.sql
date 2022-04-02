@@ -24,14 +24,18 @@ CREATE TABLE coches(
     combustible ENUM('Gasolina','Diésel') NOT NULL
 );
 CREATE TABLE alquilerCoches(
-    matricula VARCHAR(7),
-    dni VARCHAR (9),
-    fechaInicio DATE,
-    fechaFinal DATE,
-    precioPorDia DOUBLE,
-    lugarDevolucion ENUM('Barcelona','Madrid','Sevilla','Zaragoza','Santander','Tarragona'),
-    isRetornDipositPle TINYINT,
-    tipoSeguro ENUM('Franquícia','Sin Franquícia'),
+    matricula VARCHAR(7) NOT NULL,
+    dni VARCHAR (9) NOT NULL,
+    fechaInicio DATE NOT NULL,
+    fechaFinal DATE NOT NULL,
+    precioPorDia DOUBLE NOT NULL,
+    lugarDevolucion ENUM('Barcelona','Madrid','Sevilla','Zaragoza','Santander','Tarragona') NOT NULL,
+    isRetornDipositPle TINYINT NOT NULL,
+    tipoSeguro ENUM('Franquícia','Sin Franquícia') NOT NULL,
+    devuelto TINYINT,
+    fechaDevuelto DATE,
+    lugarDevuelto ENUM('Barcelona','Madrid','Sevilla','Zaragoza','Santander','Tarragona'),
+    precioFinal DOUBLE,
     PRIMARY KEY (matricula, dni),
     FOREIGN KEY (matricula) REFERENCES coches(matricula) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (dni) REFERENCES clientes(dni) ON DELETE CASCADE ON UPDATE CASCADE
@@ -53,10 +57,10 @@ CREATE TABLE mecanicos(
 );
 
 CREATE TABLE mantenimientoCoches(
-    matricula VARCHAR(7),
-    dni VARCHAR (9),
-    fechaInMantenimiento DATE,
-    fechaFiMantenimiento DATE,
+    matricula VARCHAR(7) NOT NULL,
+    dni VARCHAR (9) NOT NULL,
+    fechaInMantenimiento DATE NOT NULL,
+    fechaFiMantenimiento DATE NOT NULL,
     PRIMARY KEY (matricula, dni),
     FOREIGN KEY (matricula) REFERENCES coches(matricula) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (dni) REFERENCES mecanicos(dni) ON DELETE CASCADE ON UPDATE CASCADE

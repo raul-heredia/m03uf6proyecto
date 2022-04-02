@@ -124,8 +124,9 @@ public class main {
                         System.out.println("1 - Listar Alquileres");
                         System.out.println("2 - Listar un Alquiler");
                         System.out.println("3 - Alquilar Coche");
-                        System.out.println("4 - Modificar Alquiler");
-                        System.out.println("5 - Eliminar Alquiler");
+                        System.out.println("4 - Devolver Coche");
+                        System.out.println("5 - Modificar Alquiler");
+                        System.out.println("6 - Eliminar Alquiler");
                         System.out.println("0 - Volver Atrás");
                         System.out.printf("Selecciona una opción: ");
 
@@ -145,11 +146,15 @@ public class main {
                                 AlquilerCoches.insertarRegistro();
                                 pause();
                                 break;
-                            case "4":
-                                AlquilerCoches.modificarRegistro();
+                           case "4":
+                                AlquilerCoches.devolverCoche();
                                 pause();
                                 break;
                             case "5":
+                                AlquilerCoches.modificarRegistro();
+                                pause();
+                                break;
+                            case "6":
                                 AlquilerCoches.eliminarRegistro();
                                 pause();
                                 break;

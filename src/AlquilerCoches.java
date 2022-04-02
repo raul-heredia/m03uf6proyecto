@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
@@ -145,7 +147,7 @@ public class AlquilerCoches {
                 long diff = hoy.getTime() - fechaFinal.getTime();
                 TimeUnit time = TimeUnit.DAYS;
                 long diferencia = time.convert(diff, TimeUnit.MILLISECONDS);
-                System.out.println("Dias: "+ diferencia);
+                //System.out.println("Dias: "+ diferencia);
                 if(diferencia <= 0){
                     isCochePrestadoAhora = true;
                 }
@@ -243,7 +245,128 @@ public class AlquilerCoches {
             System.out.println(e);
         }
     }
+    public static void devolverCoche(){
+        try{
+            String matricula, dni, fechaInicio, fechaFinal, lugarDevolucion, isRetornDipositPle, fechaDevuelto, lugarDevuelto;
+            int devuelto;
+            double precioPorDia, precioFinal;
 
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String coche = "SELECT * FROM coches where matricula = ?";
+            String cliente = "SELECT * FROM clientes where dni = ?";
+            String getDatosAlquiler = "SELECT * FROM alquilercoches where matricula = ? and dni = ?";
+            String consulta = "UPDATE alquilercoches SET devuelto = 1, fechaDevuelto = ?, lugarDevuelto = ?, precioFinal = ? WHERE matricula = ? AND dni = ?";
+            PreparedStatement sentenciaCoche = conexion.prepareStatement(coche);
+            PreparedStatement sentenciaIsCliente = conexion.prepareStatement(cliente);
+            PreparedStatement sentenciaDatosPrestamo = conexion.prepareStatement(getDatosAlquiler);
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+
+
+
+            System.out.printf("Introduce la Matrícula del Vehículo: ");
+            matricula = scanner.next();
+            sentenciaCoche.setString(1, matricula);
+            ResultSet resultCoche = sentenciaCoche.executeQuery();
+            if (!resultCoche.next()){
+                System.out.println("Error, El coche solicitado no existe");
+                return;
+            }
+            System.out.printf("Introduce el DNI del cliente: ");
+            dni = scanner.next();
+            sentenciaIsCliente.setString(1, dni);
+            ResultSet resultCliente = sentenciaIsCliente.executeQuery();
+            if (!resultCliente.next()){
+                System.out.println("Error, El cliente solicitado no existe");
+                return;
+            }
+            sentenciaDatosPrestamo.setString(1, matricula);
+            sentenciaDatosPrestamo.setString(2, dni);
+            ResultSet resultDatosPrestamo = sentenciaDatosPrestamo.executeQuery();
+            if (!resultDatosPrestamo.next()){
+                System.out.println("Error, No existe ningún alquiler con los datos solicitados");
+                return;
+            }
+            if(resultDatosPrestamo.getString("devuelto").equals("1")){
+                System.out.println("Error, Este alquiler ya ha sido marcado como Devuelto.");
+                System.out.println("Fecha de devolución del alquiler solicitado: " + resultDatosPrestamo.getString("fechaDevuelto"));
+                return;
+            }
+            fechaInicio = resultDatosPrestamo.getString("fechaInicio");
+            fechaFinal = resultDatosPrestamo.getString("fechaFinal");
+            precioPorDia = Double.parseDouble(resultDatosPrestamo.getString("precioPorDia"));
+            lugarDevolucion = resultDatosPrestamo.getString("lugarDevolucion");
+            isRetornDipositPle = resultDatosPrestamo.getString("isRetornDipositPle");
+
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date fechaInicialD = sdf.parse(fechaInicio);
+            Date fechaFinalD = sdf.parse(fechaFinal);
+            Date hoy = new Date();
+            long diffDeMas = hoy.getTime() - fechaFinalD.getTime();
+            long diffTotalDias = fechaFinalD.getTime() - fechaInicialD.getTime();
+            TimeUnit time = TimeUnit.DAYS;
+            long totalDias = time.convert(diffTotalDias, TimeUnit.MILLISECONDS);
+            long diferenciaDeMas = time.convert(diffDeMas, TimeUnit.MILLISECONDS);
+
+
+            precioFinal = precioPorDia * totalDias;
+            if(diferenciaDeMas > 0){
+                System.out.println("El vehículo se ha entregado con un retraso de: " + diferenciaDeMas + " dias");
+                System.out.println("Atención, Se va a proceder al cobro de 49.99€ por cada día de retraso");
+                precioFinal = (49.99 * diferenciaDeMas) + precioFinal;
+            }
+
+            if(isRetornDipositPle.equals("1")) {
+                System.out.printf("El cliente ha devuelto el vehículo con el deposito lleno? 0 -> No | 1 -> Sí: ");
+                switch (scanner.next()) {
+                    case "0" -> {
+                        System.out.println("Atención, El vehículo debía ser entregado con el deposito lleno");
+                        System.out.println("Atención, Aplicando tasa de 59,99€ por no entregarlo con el deposito lleno.");
+                        precioFinal = precioFinal + 59.99;
+                    }
+                    case "1" -> {
+
+                    }
+                    default -> {
+                        System.out.println("Error, no has seleccionado una opción válida. Se ha marcado entrega con depósito lleno por defecto.");
+                    }
+                }
+            }
+            System.out.printf("El vehículo ha sido devuelto en " + lugarDevolucion + "? 0 -> No | 1 -> Sí: ");
+            switch (scanner.next()) {
+                case "0" -> {
+                    System.out.println("Atención, El vehículo debía no ha sido entregado en el lugar acordado");
+                    System.out.println("Atención, Aplicando tasa de 89,99€ por no entregarlo en el lugar acordado.");
+                    System.out.printf("Introduce el lugar de devolución [Barcelona, Madrid, Sevilla, Zaragoza, Santander, Tarragona]: ");
+                    lugarDevuelto = scanner.next();
+                    precioFinal = precioFinal + 89.99;
+                }
+                case "1" -> lugarDevuelto = lugarDevolucion;
+                default -> {
+                    System.out.println("Error, no has seleccionado una opción válida. Se ha marcado lugar de devolución como correcto.");
+                    lugarDevuelto = lugarDevolucion;
+                }
+            }
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            DecimalFormat def=new DecimalFormat("0.00");
+            double precioFinalRound = Double.parseDouble(def.format(precioFinal).replace(",","."));
+            fechaDevuelto = df.format(hoy);
+
+            sentencia.setString(1, fechaDevuelto);
+            sentencia.setString(2, lugarDevuelto);
+            sentencia.setDouble(3, precioFinalRound);
+            sentencia.setString(4, matricula);
+            sentencia.setString(5, dni);
+            int row = sentencia.executeUpdate();
+            System.out.println("La devolución se ha completado correctamente");
+            conexion.close();
+            System.out.println("El Precio Total Asciende A : " + precioFinalRound + "€");
+
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
     public static void modificarRegistro(){
         try {
             Connection conexion = (Connection) Conexion.conectarBd();
