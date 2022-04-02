@@ -221,6 +221,10 @@ public class main {
                                 MantenimientoCoches.listarUno();
                                 pause();
                                 break;
+                            case "3":
+                                MantenimientoCoches.insertarRegistro();
+                                pause();
+                                break;
                             case "5":
                                 MantenimientoCoches.eliminarRegistro();
                                 pause();

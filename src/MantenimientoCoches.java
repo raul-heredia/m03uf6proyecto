@@ -82,7 +82,52 @@ public class MantenimientoCoches {
             System.out.println(e);
         }
     }
+    public static void insertarRegistro(){
+        try{
+        Connection conexion = (Connection) Conexion.conectarBd();
+        String matricula, dni, fechaInMantenimiento, fechaFiMantenimiento;
 
+        String coche = "SELECT * FROM coches where matricula = ?";
+        String mecanico = "SELECT * FROM mecanicos where dni = ?";
+        String consulta = "INSERT INTO mantenimientocoches (matricula,dni,fechaInMantenimiento,fechaFiMantenimiento) values(?,?,?,?)";
+        PreparedStatement sentenciaCoche = conexion.prepareStatement(coche);
+        PreparedStatement sentenciaMecanico = conexion.prepareStatement(mecanico);
+        PreparedStatement sentencia = conexion.prepareStatement(consulta);
+
+            System.out.printf("Introduce la Matrícula del Vehículo: ");
+            matricula = scanner.next();
+            sentenciaCoche.setString(1, matricula);
+            ResultSet resultCoche = sentenciaCoche.executeQuery();
+            if (!resultCoche.next()){
+                System.out.println("Error, El coche solicitado no existe");
+                return;
+            }
+
+            System.out.printf("Introduce el DNI del mecánico: ");
+            dni = scanner.next();
+            sentenciaMecanico.setString(1, dni);
+            ResultSet resultMecanico = sentenciaMecanico.executeQuery();
+            if (!resultMecanico.next()){
+                System.out.println("Error, El mecánico solicitado no existe");
+                return;
+            }
+            System.out.printf("Introduce la Fecha de Inicio del Mantenimiento [Formato YYYY-MM-DD]: ");
+            fechaInMantenimiento = scanner.next();
+            System.out.printf("Introduce la Fecha de Finalización del Mantenimiento [Formato YYYY-MM-DD]: ");
+            fechaFiMantenimiento = scanner.next();
+            MantenimientoCoches m = new MantenimientoCoches(matricula,dni,fechaInMantenimiento,fechaFiMantenimiento);
+            sentencia.setString(1, m.getMatricula());
+            sentencia.setString(2, m.getDni());
+            sentencia.setString(3, m.getFechaInMantenimiento());
+            sentencia.setString(4, m.getFechaFiMantenimiento());
+            int row = sentencia.executeUpdate();
+            System.out.println("Se ha añadido el mantenimiento correctamnete");
+            conexion.close();
+        }catch(Exception e){
+            System.out.println("Error, no se ha podido insertar el registro");
+            System.out.println(e);
+        }
+    }
     public static void eliminarRegistro(){
         try{
             String matricula, dni;
