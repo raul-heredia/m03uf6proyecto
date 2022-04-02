@@ -230,6 +230,10 @@ public class main {
                                 MantenimientoCoches.insertarRegistro();
                                 pause();
                                 break;
+                            case "4":
+                                MantenimientoCoches.modificarRegistro();
+                                pause();
+                                break;
                             case "5":
                                 MantenimientoCoches.eliminarRegistro();
                                 pause();
