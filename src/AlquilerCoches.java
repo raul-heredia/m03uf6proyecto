@@ -1,9 +1,7 @@
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class AlquilerCoches {
@@ -106,44 +104,6 @@ public class AlquilerCoches {
             System.out.println(e);
         }
     }
-    public static void listarPorMatricula(){
-        try{
-            Connection conexion = (Connection) Conexion.conectarBd();
-            String matricula;
-            String consulta = "SELECT alquilercoches.matricula, alquilercoches.dni, alquilercoches.fechaInicio," +
-            "alquilercoches.fechaFinal,alquilercoches.precioPorDia,alquilercoches.lugarDevolucion,alquilercoches.isRetornDipositPle," +
-                    "alquilercoches.tipoSeguro, clientes.nombreCompleto, coches.marca, coches.modelo FROM alquilercoches " +
-                    "INNER JOIN clientes ON alquilerCoches.dni = clientes.dni INNER JOIN coches ON alquilerCoches.matricula = coches.matricula " +
-                    "WHERE alquilercoches.matricula = ?";
-
-            PreparedStatement sentencia = conexion.prepareStatement(consulta);
-            System.out.printf("Introduce la matrícula del coche alquilado: ");
-            matricula = scanner.next();
-            AlquilerCoches a = new AlquilerCoches(matricula, "");
-            sentencia.setString(1, a.getMatricula());
-            ResultSet resultado = sentencia.executeQuery();
-            if (resultado.next() == false){
-                System.out.println("Error, No hemos encontrado ningún alquiler asociado al coche con matrícula: " + matricula);
-                return;
-            }
-            TableList tabla = table();
-            while(resultado.next()){
-                String isDeposito = "No";
-                if(resultado.getString("isRetornDipositPle").equals("1")){
-                    isDeposito = "Sí";
-                }
-                tabla.addRow(resultado.getString("matricula"),resultado.getString("marca") + " " +
-                                resultado.getString("modelo") , resultado.getString("dni"),
-                        resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
-                        resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
-                        resultado.getString("lugarDevolucion"),isDeposito,resultado.getString("tipoSeguro"));
-            }
-            tabla.print();
-            conexion.close();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-    }
 
     public static void insertarRegistro(){
         try{
@@ -167,6 +127,7 @@ public class AlquilerCoches {
 
             String consulta = "insert into alquilercoches (matricula,dni,fechaInicio,fechaFinal,precioPorDia,lugarDevolucion,isRetornDipositPle,tipoSeguro) values(?,?,?,?,?,?,?,?);";
             PreparedStatement sentencia = conexion.prepareStatement(consulta);
+
             System.out.printf("Introduce la Matrícula del Vehículo: ");
             matricula = scanner.next();
             sentenciaCoche.setString(1, matricula);
@@ -184,11 +145,12 @@ public class AlquilerCoches {
                 long diff = hoy.getTime() - fechaFinal.getTime();
                 TimeUnit time = TimeUnit.DAYS;
                 long diferencia = time.convert(diff, TimeUnit.MILLISECONDS);
+                System.out.println("Dias: "+ diferencia);
                 if(diferencia <= 0){
                     isCochePrestadoAhora = true;
                 }
                 if(isCochePrestadoAhora){
-                    System.out.println("Error, el vehículo solicitado se encuentra en prestamo actualmente");
+                    System.out.println("Error, el vehículo solicitado se encuentra prestado actualmente");
                     return;
                 }
             }
@@ -278,6 +240,124 @@ public class AlquilerCoches {
             conexion.close();
         }catch (Exception e){
             System.out.println("Error, no se ha podido insertar el registro, comprueba que los datos introducidos son correctos");
+            System.out.println(e);
+        }
+    }
+
+    public static void modificarRegistro(){
+        try {
+            Connection conexion = (Connection) Conexion.conectarBd();
+            String matricula, dni, lugarDevolucion, tipoSeguro, fechaInicio, fechaFinal, isRetornDipositPle, precioPorDia;
+            String matriculaMod, dniMod, lugarDevolucionMod, tipoSeguroMod, fechaInicioMod, fechaFinalMod, isRetornDipositPleMod, precioPorDiaMod;
+            String preconsulta = "SELECT * FROM alquilercoches WHERE matricula = ? AND dni = ?;";
+            String consulta = "UPDATE alquilercoches SET fechaInicio = ?, fechaFinal = ?, precioPorDia = ?, lugarDevolucion = ?, isRetornDipositPle = ?," +
+                    " tiposeguro = ? where matricula = ? AND dni = ?;";
+            PreparedStatement preSentencia = conexion.prepareStatement(preconsulta);
+            PreparedStatement sentencia = conexion.prepareStatement(consulta);
+
+
+
+            String coche = "SELECT * FROM coches where matricula = ?";
+            String cliente = "SELECT * FROM clientes where dni = ?";
+
+            PreparedStatement sentenciaCoche = conexion.prepareStatement(coche);
+            PreparedStatement sentenciaCliente = conexion.prepareStatement(cliente);
+
+
+            System.out.printf("Introduce la Matrícula del Vehículo: ");
+            matricula = scanner.next();
+            sentenciaCoche.setString(1, matricula);
+            ResultSet resultCoche = sentenciaCoche.executeQuery();
+            if (!resultCoche.next()){
+                System.out.println("Error, El coche solicitado no existe");
+                return;
+            }
+            System.out.printf("Introduce el DNI del cliente: ");
+            dni = scanner.next();
+            sentenciaCliente.setString(1, dni);
+            ResultSet resultCliente = sentenciaCliente.executeQuery();
+            if (!resultCliente.next()){
+                System.out.println("Error, El cliente solicitado no existe");
+                return;
+            }
+
+            preSentencia.setString(1, matricula);
+            preSentencia.setString(2, dni);
+            ResultSet resultado = preSentencia.executeQuery();
+
+            if (resultado.next() == false){
+                System.out.println("Error, No existe ningun alquiler con Matrícula: " + matricula + " y DNI: " + dni);
+                return;
+            }
+            fechaInicio = resultado.getString("fechaInicio");
+            fechaFinal = resultado.getString("fechaFinal");
+            precioPorDia = resultado.getString("precioPorDia");
+            lugarDevolucion = resultado.getString("lugarDevolucion");
+            isRetornDipositPle = resultado.getString("isRetornDipositPle");
+            tipoSeguro = resultado.getString("tipoSeguro");
+
+            System.out.println("---- DATOS ALQUILER ANTES DE MODIFICAR ----");
+            TableList tablaAntes = new TableList(8,"Matrícula","DNI","Fecha Inicio Alquiler","Fecha Final Alquiler","Precio Por Día","Lugar de Devolución","Retorno Deposito Lleno","Tipo de Seguro").sortBy(0).withUnicode(true);
+            tablaAntes.addRow(matricula, dni, fechaInicio, fechaFinal, precioPorDia  + "€", lugarDevolucion, isRetornDipositPle.equals("1") ? "Sí" : "No", tipoSeguro);
+            tablaAntes.print();
+            main.pause();
+            System.out.printf("Introduce la Fecha de Inicio [YYYY-MM-DD] [Deja en blanco para no modificar]: ");
+            fechaInicioMod = scanner.next();
+            if(fechaInicioMod.isEmpty()) fechaInicioMod = fechaInicio;
+            System.out.printf("Introduce la Fecha Final [YYYY-MM-DD] [Deja en blanco para no modificar]: ");
+            fechaFinalMod = scanner.next();
+            if(fechaFinalMod.isEmpty()) fechaFinalMod = fechaFinal;
+            System.out.printf("Introduce el Precio por Día [Deja en blanco para no modificar]: ");
+            precioPorDiaMod = scanner.next();
+            if(precioPorDiaMod.isEmpty()) precioPorDiaMod = precioPorDia;
+            TableList tLugarDevolucion = new TableList(2,"Valor", "Ciudad").sortBy(0).withUnicode(true);
+            tLugarDevolucion.addRow("1","Barcelona");
+            tLugarDevolucion.addRow("2","Madrid");
+            tLugarDevolucion.addRow("3","Sevilla");
+            tLugarDevolucion.addRow("4","Zaragoza");
+            tLugarDevolucion.addRow("5","Santander");
+            tLugarDevolucion.addRow("6","Tarragona");
+            System.out.println("Inserta el lugar de devolución: ");
+            tLugarDevolucion.print();
+            System.out.printf("Selecciona una opción [Deja en blanco para no modificar]: ");
+            lugarDevolucionMod = scanner.next();
+            switch (lugarDevolucionMod) {
+                case "1" -> lugarDevolucionMod = "Barcelona";
+                case "2" -> lugarDevolucionMod = "Madrid";
+                case "3" -> lugarDevolucionMod = "Sevilla";
+                case "4" -> lugarDevolucionMod = "Zaragoza";
+                case "5" -> lugarDevolucionMod = "Santander";
+                case "6" -> lugarDevolucionMod = "Tarragona";
+                default -> {
+                    lugarDevolucionMod = lugarDevolucion;
+                }
+            }
+            System.out.printf("Debe devolver el depósito lleno? 0 -> No | 1 -> Sí [Deja en blanco para no modificar]: ");
+            isRetornDipositPleMod = scanner.next();
+            if(isRetornDipositPle.isEmpty()) isRetornDipositPleMod = isRetornDipositPle;
+            System.out.printf("Tipo de Seguro: 0 -> Sin Franquícia | 1 -> Con Franquícia [Deja en blanco para no modificar]: ");
+            tipoSeguroMod = scanner.next();
+            switch (tipoSeguroMod) {
+                case "1" -> tipoSeguroMod = "Franquícia";
+                case "2" -> tipoSeguroMod = "Sin Franquícia";
+                default -> {
+                    tipoSeguroMod = tipoSeguro;
+                }
+            }
+            AlquilerCoches a = new AlquilerCoches(matricula, dni, lugarDevolucionMod, tipoSeguroMod, 0,Double.parseDouble(precioPorDiaMod),Integer.parseInt(isRetornDipositPleMod));
+            sentencia.setString(1, fechaInicioMod);
+            sentencia.setString(2, fechaFinalMod);
+            sentencia.setDouble(3, a.getPrecioPorDia());
+            sentencia.setString(4, a.getLugarDevolucion());
+            sentencia.setInt(5, a.getRetornDipositPle());
+            sentencia.setString(6, a.getTipoSeguro());
+            sentencia.setString(7, a.getMatricula());
+            sentencia.setString(8, a.getDni());
+            int row = sentencia.executeUpdate();
+            System.out.println("Se ha modificado el registro correctamente");
+            conexion.close();
+        }catch(Exception e){
+            System.out.println(e);
         }
     }
 

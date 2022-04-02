@@ -30,7 +30,7 @@ public class Coches {
 
     public static TableList table(){
         return new TableList(9,"Matrícula","Nº de Bastidor","Marca y Modelo","Año de Fabricación","Color",
-                "Nº de Plazas","Nº de Puertas","Grandaria Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
+                "Nº de Plazas","Nº de Puertas","Capacidad del Maletero","Tipo de Combustible").sortBy(0).withUnicode(true);
     }
 
     public static void listarCoches(){
