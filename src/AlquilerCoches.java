@@ -35,7 +35,7 @@ public class AlquilerCoches {
     }
 
     public static TableList table(){
-        return new TableList(10,"Matrícula","Marca y Modelo","DNI","Nombre Completo Cliente","Fecha Inicio Alquiler",
+        return new TableList(11,"Devuelto","Matrícula","Marca y Modelo","DNI","Nombre Completo Cliente","Fecha Inicio Alquiler",
                 "Fecha Fin Alquiler","Precio Por Día","Lugar de Devolución","Retorno Deposito Lleno","Tipo de Seguro").sortBy(0).withUnicode(true);
     }
 
@@ -43,7 +43,7 @@ public class AlquilerCoches {
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
             Statement sentencia = conexion.createStatement();
-            ResultSet resultado = sentencia.executeQuery("SELECT alquilercoches.matricula, alquilercoches.dni, alquilercoches.fechaInicio," +
+            ResultSet resultado = sentencia.executeQuery("SELECT alquilercoches.matricula, alquilercoches.devuelto, alquilercoches.dni, alquilercoches.fechaInicio," +
                     "alquilercoches.fechaFinal,alquilercoches.precioPorDia,alquilercoches.lugarDevolucion,alquilercoches.isRetornDipositPle," +
                     "alquilercoches.tipoSeguro, clientes.nombreCompleto, coches.marca, coches.modelo FROM alquilercoches " +
                     "INNER JOIN clientes ON alquilerCoches.dni = clientes.dni INNER JOIN coches ON alquilerCoches.matricula = coches.matricula");
@@ -51,10 +51,14 @@ public class AlquilerCoches {
             TableList tabla = table();
             while(resultado.next()){
                 String isDeposito = "No";
+                String isDevuelto = "No";
                 if(resultado.getString("isRetornDipositPle").equals("1")){
                     isDeposito = "Sí";
+                }if(resultado.getString("devuelto").equals("1")){
+                    isDevuelto = "Sí";
                 }
-                tabla.addRow(resultado.getString("matricula"),resultado.getString("marca") + " " +
+
+                tabla.addRow(isDevuelto,resultado.getString("matricula"),resultado.getString("marca") + " " +
                         resultado.getString("modelo") , resultado.getString("dni"),
                         resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
                         resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
@@ -63,6 +67,7 @@ public class AlquilerCoches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se pueden listar los registros actualmente");
             System.out.println(e);
         }
     }
@@ -71,7 +76,7 @@ public class AlquilerCoches {
         try{
             Connection conexion = (Connection) Conexion.conectarBd();
             String matricula, dni;
-            String consulta = "SELECT alquilercoches.matricula, alquilercoches.dni, alquilercoches.fechaInicio," +
+            String consulta = "SELECT alquilercoches.matricula, alquilercoches.devuelto, alquilercoches.dni, alquilercoches.fechaInicio," +
             "alquilercoches.fechaFinal,alquilercoches.precioPorDia,alquilercoches.lugarDevolucion,alquilercoches.isRetornDipositPle," +
                     "alquilercoches.tipoSeguro, clientes.nombreCompleto, coches.marca, coches.modelo FROM alquilercoches " +
                     "INNER JOIN clientes ON alquilerCoches.dni = clientes.dni INNER JOIN coches ON alquilerCoches.matricula = coches.matricula " +
@@ -90,19 +95,24 @@ public class AlquilerCoches {
                 return;
             }
             TableList tabla = table();
-                String isDeposito = "No";
-                if(resultado.getString("isRetornDipositPle").equals("1")){
-                    isDeposito = "Sí";
-                }
-                tabla.addRow(resultado.getString("matricula"),resultado.getString("marca") + " " +
-                                resultado.getString("modelo") , resultado.getString("dni"),
-                        resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
-                        resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
-                        resultado.getString("lugarDevolucion"),isDeposito,resultado.getString("tipoSeguro"));
+            String isDeposito = "No";
+            String isDevuelto = "No";
+            if(resultado.getString("isRetornDipositPle").equals("1")){
+                isDeposito = "Sí";
+            }if(resultado.getString("devuelto").equals("1")){
+                isDevuelto = "Sí";
+            }
+
+            tabla.addRow(isDevuelto,resultado.getString("matricula"),resultado.getString("marca") + " " +
+                            resultado.getString("modelo") , resultado.getString("dni"),
+                    resultado.getString("nombreCompleto"),resultado.getString("fechaInicio"),
+                    resultado.getString("fechaFInal"),resultado.getString("precioPorDia") + "€",
+                    resultado.getString("lugarDevolucion"),isDeposito,resultado.getString("tipoSeguro"));
 
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se puede listar un vehículo actualmente");
             System.out.println(e);
         }
     }
@@ -119,7 +129,7 @@ public class AlquilerCoches {
 
             String cliente = "SELECT * FROM clientes where dni = ?";
 
-            String isCochePrestado = "SELECT fechaFinal FROM alquilercoches where matricula = ?";
+            String isCochePrestado = "SELECT devuelto FROM alquilercoches where matricula = ?";
 
             PreparedStatement sentenciaCoche = conexion.prepareStatement(coche);
 
@@ -141,14 +151,7 @@ public class AlquilerCoches {
             sentenciaPrestado.setString(1, matricula);
             ResultSet resultPrestado = sentenciaPrestado.executeQuery();
             while(resultPrestado.next()){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                Date fechaFinal = sdf.parse(resultPrestado.getString("fechaFInal"));
-                Date hoy = new Date();
-                long diff = hoy.getTime() - fechaFinal.getTime();
-                TimeUnit time = TimeUnit.DAYS;
-                long diferencia = time.convert(diff, TimeUnit.MILLISECONDS);
-                //System.out.println("Dias: "+ diferencia);
-                if(diferencia <= 0){
+                if(resultPrestado.getString("devuelto").equals("0")){
                     isCochePrestadoAhora = true;
                 }
                 if(isCochePrestadoAhora){
@@ -176,6 +179,7 @@ public class AlquilerCoches {
                 precioPorDia = scanner.nextDouble();
             }catch(Exception e){
                 System.out.println("Error, precio por día no valido, se ha aplicado el valor 50.00 por defecto");
+                precioPorDia = 50;
                 scanner.next();
             }
             TableList tLugarDevolucion = new TableList(2,"Valor", "Ciudad").sortBy(0).withUnicode(true);
@@ -221,7 +225,7 @@ public class AlquilerCoches {
                 isRetornDipositPle = scanner.nextInt();
                 if(isRetornDipositPle < 0 || isRetornDipositPle > 1){
                     System.out.println("Error, no se ha introducido un número válido, se ha aplicado el valor 0 por defecto");
-                    numeroDias = 0;
+                    isRetornDipositPle = 0;
                 }
             }catch(Exception e){
                 System.out.println("Error, no se ha introducido un número válido, se ha aplicado el valor 0 por defecto");
@@ -364,6 +368,7 @@ public class AlquilerCoches {
             System.out.println("El Precio Total Asciende A : " + precioFinalRound + "€");
 
         }catch(Exception e){
+            System.out.println("Error, no se ha podido devolver el coche actualmente");
             System.out.println(e);
         }
     }
@@ -480,6 +485,7 @@ public class AlquilerCoches {
             System.out.println("Se ha modificado el registro correctamente");
             conexion.close();
         }catch(Exception e){
+            System.out.println("Error, no se ha podido modificar el registro");
             System.out.println(e);
         }
     }
@@ -501,6 +507,7 @@ public class AlquilerCoches {
             System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido eliminar el registro");
             System.out.println(e);
         }
     }

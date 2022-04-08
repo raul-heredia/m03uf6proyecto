@@ -9,6 +9,7 @@ public class Conexion {
             Connection conexion = DriverManager.getConnection(miUrl, "root", "root");
             return conexion;
         }catch(Exception e){
+            System.out.println("Error, no se ha podido conectar con la base de datos.");
             System.out.println(e);
             return null;
         }

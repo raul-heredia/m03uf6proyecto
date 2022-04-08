@@ -47,6 +47,7 @@ public class MantenimientoCoches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se han podido listar los mantenimientos");
             System.out.println(e);
         }
     }
@@ -79,6 +80,7 @@ public class MantenimientoCoches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se han podido listar los mantenimientos");
             System.out.println(e);
         }
     }
@@ -193,6 +195,7 @@ public class MantenimientoCoches {
             System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido eliminar el registro");
             System.out.println(e);
         }
     }

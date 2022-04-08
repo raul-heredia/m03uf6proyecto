@@ -1,5 +1,0 @@
-Alquileres
-	Modificar
-Mantenimiento
-	Insertar
-	Modificar

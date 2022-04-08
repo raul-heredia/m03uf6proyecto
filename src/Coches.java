@@ -50,6 +50,7 @@ public class Coches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se han podido listar los vehiculos");
             System.out.println(e);
         }
     }
@@ -79,6 +80,7 @@ public class Coches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido listar el vehículo seleccionado");
             System.out.println(e);
         }
     }
@@ -113,6 +115,7 @@ public class Coches {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido hacer la lista por asientos");
             System.out.println(e);
         }
     }
@@ -178,10 +181,11 @@ public class Coches {
                 int row = sentencia.executeUpdate();
                 System.out.println("Se ha insertado el vehículo correctamente");
             }catch(Exception e){
-                System.out.println("Error, no se ha podido instanciar el vehículo, alguno de los datos introducidos era .");
+                System.out.println("Error, no se ha podido instanciar el vehículo, alguno de los datos introducidos era incorrecto.");
             }
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido insertar el vehiculo");
             System.out.println(e);
         }
     }
@@ -281,10 +285,11 @@ public class Coches {
                 int row = sentencia.executeUpdate();
                 System.out.println("Se ha actualizado el registro correctamente");
             }catch(Exception e){
-                System.out.println("Error, no se ha podido actualizar el vehículo, alguno de los datos introducidos era .");
+                System.out.println("Error, no se ha podido actualizar el vehículo, alguno de los datos introducidos era incorrecto.");
             }
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido actualizar el registro");
             System.out.println(e);
         }
     }
@@ -303,6 +308,7 @@ public class Coches {
             System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido eliminar el registro");
             System.out.println(e);
         }
     }

@@ -59,6 +59,7 @@ public class Mecanicos {
             tabla.print();
             conexion.close();
         } catch (Exception e) {
+            System.out.println("Error, no se han podido listar los mecanicos");
             System.out.println(e);
         }
     }
@@ -88,6 +89,7 @@ public class Mecanicos {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido listar el mecanico");
             System.out.println(e);
         }
     }
@@ -122,9 +124,15 @@ public class Mecanicos {
             System.out.printf("Introduce los Puntos del Carnet: ");
             try{
                 puntosCarnet = scanner.nextInt();
+                if(puntosCarnet < 0 || puntosCarnet > 15) {
+                    System.out.println("Error no has introducido un número válido (No puede ser menor a 0 ni mayor a 15).");
+                    System.out.println("Se ha aplicado el valor 0 por defecto.");
+                    puntosCarnet = 0;
+                }
             }catch(Exception e){
                 System.out.println("Error no has introducido un número válido.");
                 System.out.println("Se ha aplicado el valor 0 por defecto.");
+                puntosCarnet = 0;
                 scanner.next();
             }
             System.out.printf("Introduce el numero de Seguridad Social: ");
@@ -133,14 +141,16 @@ public class Mecanicos {
             }catch(Exception e){
                 System.out.println("Error no has introducido un número válido.");
                 System.out.println("Se ha aplicado el valor 0 por defecto.");
+                numSS = 0;
                 scanner.next();
             }
             System.out.printf("Introduce el salario: ");
             try{
-                numSS = (int) scanner.nextDouble();
+                salario = (int) scanner.nextDouble();
             }catch(Exception e){
                 System.out.println("Error no has introducido un número válido.");
                 System.out.println("Se ha aplicado el valor 0 por defecto.");
+                salario = 0;
                 scanner.next();
             }
 
@@ -163,6 +173,7 @@ public class Mecanicos {
             System.out.println("Se ha insertado el Mecanico correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido insertar el mecanico");
             System.out.println(e);
         }
     }
@@ -271,9 +282,11 @@ public class Mecanicos {
                 System.out.println("Se ha modificado el registro correctamente");
                 conexion.close();
             }catch(Exception e){
+                System.out.println("Error, no se ha podido modificar el registro");
                 System.out.println(e);
             }
         }catch (Exception e){
+            System.out.println("Error, no se ha podido modificar el registro");
             System.out.println(e);
         }
     }
@@ -292,6 +305,7 @@ public class Mecanicos {
             System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido eliminar el registro");
             System.out.println(e);
         }
     }

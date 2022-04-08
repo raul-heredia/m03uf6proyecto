@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Clientes {
@@ -46,6 +47,7 @@ public class Clientes {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se pueden listar los clientes actualmente");
             System.out.println(e);
         }
     }
@@ -75,6 +77,7 @@ public class Clientes {
             tabla.print();
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se pueden listar los clientes actualmente");
             System.out.println(e);
         }
     }
@@ -105,9 +108,15 @@ public class Clientes {
             System.out.printf("Introduce los Puntos del Carnet: ");
             try{
                 puntosCarnet = scanner.nextInt();
+                if(puntosCarnet < 0 || puntosCarnet > 15){
+                    System.out.println("Error no has introducido un número válido (No puede ser menor a 0 ni mayor a 15).");
+                    System.out.println("Se ha aplicado el valor 0 por defecto.");
+                    puntosCarnet = 0;
+                }
             }catch(Exception e){
                 System.out.println("Error no has introducido un número válido.");
                 System.out.println("Se ha aplicado el valor 0 por defecto.");
+                puntosCarnet = 0;
                 scanner.next();
             }
 
@@ -125,6 +134,7 @@ public class Clientes {
             System.out.println("Se ha insertado el cliente correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido insertar el cliente");
             System.out.println(e);
         }
     }
@@ -212,6 +222,7 @@ public class Clientes {
             System.out.println("Se ha modificado el registro correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido modificar el registro");
             System.out.println(e);
         }
     }
@@ -229,6 +240,7 @@ public class Clientes {
             System.out.println("Registro eliminado correctamente");
             conexion.close();
         }catch (Exception e){
+            System.out.println("Error, no se ha podido eliminar el registro");
             System.out.println(e);
         }
     }
